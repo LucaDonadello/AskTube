@@ -1,0 +1,89 @@
+// Dark theme variables
+$bg-dark: #2e2e2e;
+$bg-light: #444;
+$text-light: #ffffff;
+$input-light: #666;
+$button-bg: #ffffff;
+$button-hover-bg: #f0f0f0;
+
+body {
+  background-color: $bg-dark;
+  color: $text-light;
+  font-family: Arial, sans-serif;
+}
+
+.container {
+  max-width: 800px;
+  margin: 50px auto;
+  padding: 20px;
+}
+
+h1, h2 {
+  text-align: center;
+  color: $text-light;
+}
+
+h1 {
+  margin-bottom: 30px;
+}
+
+h2 {
+  margin-top: 40px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-control {
+  background-color: $bg-light;
+  color: $text-light;
+  border: 1px solid $input-light;
+  padding: 12px;
+  font-size: 16px;
+  border-radius: 5px;
+}
+
+.form-control:focus {
+  background-color: $bg-light;
+  border-color: $button-bg;
+  color: $text-light;
+}
+
+// Button styling
+button {
+  background-color: $button-bg;
+  border: none;
+  color: black;
+  padding: 12px 20px;
+  font-size: 18px;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 30%;
+  margin: 20px auto;
+  display: block;
+}
+
+button:hover {
+  background-color: $button-hover-bg;
+}
+
+::placeholder {
+  color: $text-light !important;
+}
+
+// Response container styling
+#responseContainer {
+  margin-top: 40px;
+  text-align: center;
+  background-color: $bg-light;
+  padding: 20px;
+  color: $text-light;
+  border-radius: 5px;
+  display: none; // Hidden by default
+}
+
+// Hidden class to hide elements
+.hidden {
+  display: none;
+}
