@@ -37,6 +37,7 @@ def process():
         try:
             ydl_opts = {
                 'format': 'bestaudio/best',  # Get the best audio format
+                
                 'noplaylist': True,          # Don't download the entire playlist if URL is a playlist
                 'outtmpl': os.path.join(download_folder, 'audioSource.%(ext)s'),  # Save to the "downloads" folder
                 'quiet': False,
@@ -77,7 +78,8 @@ def process():
             # Save the transcript to a file
             try:
                 transcribed_text = result['text']
-                transcription_filename = os.path.join(transcriptions_folder, f"{video_title}.txt")
+
+                transcription_filename = os.path.join(transcriptions_folder,"transcriptSource.txt")
                 with open(transcription_filename, "w", encoding="utf-8") as f:
                     f.write(transcribed_text)
                     print(f"Saved transcription to: {transcription_filename}")

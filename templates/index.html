@@ -63,7 +63,7 @@
           if (data.error) {
               responseText.innerText = "Error: " + data.error;
           } else {
-              responseText.innerText = data.message + "\nQuery: " + data.query;
+              responseText.innerText = data.message + "\nQuery: " + data.query + "\nTranscritption: " + data.transcription;
           }
       })
       .catch(error => {
