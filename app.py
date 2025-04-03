@@ -1,12 +1,11 @@
 from flask import Flask, render_template, request, jsonify
 import yt_dlp
 import os
-from config import Config
+import whisper
 
 app = Flask(__name__)
-app.config.from_object(Config)
 
-# Create a dedicated folder to save audio if it doesn't exist
+# Create a dedicated folder to save audio
 download_folder = "downloads"
 if not os.path.exists(download_folder):
     os.makedirs(download_folder)
@@ -18,6 +17,7 @@ def index():
 @app.route("/process", methods=["POST"])
 def process():
     try:
+        # Get data from the request
         data = request.get_json()
         print("Received Data:", data)
 
@@ -33,7 +33,7 @@ def process():
             ydl_opts = {
                 'format': 'bestaudio/best',  # Get the best audio format
                 'noplaylist': True,          # Don't download the entire playlist if URL is a playlist
-                'outtmpl': os.path.join(download_folder, '%(title)s.%(ext)s'),  # Save to the "downloads" folder
+                'outtmpl': os.path.join(download_folder, 'audioSource.%(ext)s'),  # Save to the "downloads" folder
                 'quiet': False,
                 'headers': {
                     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
@@ -41,17 +41,42 @@ def process():
             }
 
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
+                print("Starting download process...")
                 info_dict = ydl.extract_info(youtube_link, download=True)
                 video_title = info_dict.get('title', 'Unknown Title')
-                audio_filename = os.path.join(download_folder, f"{video_title}.mp3")
+                audio_filename = os.path.join(download_folder, f"audioSource.{info_dict['ext']}")
+                print(f"Video Title: {video_title}")
+                print(f"Downloaded Audio File: {audio_filename}")
 
-            print(f"Video Title: {video_title}")
+            # Ensure the audio file exists before proceeding
+            if not os.path.exists(audio_filename):
+                return jsonify({"error": f"Audio file not found after download: {audio_filename}"}), 500
+
+            # Load Whisper model
+            try:
+                model = whisper.load_model("base")  # Load the Whisper model
+                print(f"Transcribing audio file: {audio_filename}")
+                result = model.transcribe(audio_filename)  # Transcribe the audio file
+
+                print(f"Transcription: {result['text']}")
+
+                os.remove(audio_filename)  # Clean up the audio file after processing
+                
+                print(f"Removed audio file: {audio_filename}")
+
+                return jsonify({
+                    "message": f"Processing video: {video_title}",
+                    "query": user_query,
+                    "transcription": result['text']
+                })
+
+            except Exception as whisper_error:
+                print(f"Error with Whisper transcription: {whisper_error}")
+                return jsonify({"error": "Failed to transcribe audio using Whisper."}), 500
+
         except Exception as yt_error:
             print(f"Error with yt-dlp: {yt_error}")
             return jsonify({"error": f"Failed to fetch YouTube video: {str(yt_error)}"}), 500
-
-
-        return jsonify({"message": f"Processing video: {video_title}", "query": user_query, "audio_filename": audio_filename})
 
     except Exception as e:
         print(f"Error in /process route: {e}")
