@@ -33,28 +33,42 @@
       }
     });
 
+    // Get the submit button and add a click event listener
     document.getElementById("submitBtn").addEventListener("click", function() {
       const youtubeLink = document.getElementById("youtubeLink").value;
       const userQuery = document.getElementById("userQuery").value;
-
-      // Ensure both inputs have values
+      
+      // Check if both fields are filled
       if (!youtubeLink || !userQuery) {
-        alert("Please provide both the YouTube link and your query.");
-        return;
+          alert("Please provide both the YouTube link and your query.");
+          return;
       }
 
-      // Hide the "What can I help you with?" prompt after submission
+      // Hide the prompt and show the response text
       document.querySelector("h2").style.display = "none";
 
-      // Show the response text directly
+      // Hide the input fields and show the response text
       const responseText = document.getElementById("responseText");
       responseText.style.display = "block";
       responseText.innerText = "Processing... Please wait.";
 
-      // TESTING ONLY
-      setTimeout(function() {
-        responseText.innerText = "Sed ut perspiciatis unde omnis iste natus error sit voluptatem  accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt  explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut  odit aut fugit, sed quia consequuntur magni dolores eos qui ratione  voluptatem sequi nesciunt. Neque porro quisquam est, qui dolorem ipsum  quia dolor sit amet, consectetur, adipisci velit, sed quia non numquam  eius modi tempora incidunt ut labore et dolore magnam aliquam quaerat  voluptatem. Ut enim ad minima veniam, quis nostrum exercitationem ullam  corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur? Quis autem vel eum iure reprehenderit qui in ea voluptate velit esse  quam nihil molestiae consequatur, vel illum qui dolorem eum fugiat quo  voluptas nulla pariatur?";
-      }, 2000);
+      // Send the data to the server using fetch API using POST method
+      fetch("/process", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ youtubeLink, userQuery })
+      })
+      .then(response => response.json())
+      .then(data => {
+          if (data.error) {
+              responseText.innerText = "Error: " + data.error;
+          } else {
+              responseText.innerText = data.message + "\nQuery: " + data.query;
+          }
+      })
+      .catch(error => {
+          responseText.innerText = "Failed to connect to the server.";
+      });
     });
   </script>
 {% endblock %}
