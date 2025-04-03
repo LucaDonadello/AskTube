@@ -10,6 +10,12 @@ download_folder = "downloads"
 if not os.path.exists(download_folder):
     os.makedirs(download_folder)
 
+# Create a dedicated folder to save transcripts
+transcriptions_folder = "transcriptions"
+if not os.path.exists(transcriptions_folder):
+    os.makedirs(transcriptions_folder)
+
+
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -73,6 +79,20 @@ def process():
             except Exception as whisper_error:
                 print(f"Error with Whisper transcription: {whisper_error}")
                 return jsonify({"error": "Failed to transcribe audio using Whisper."}), 500
+            
+            
+            # Save the transcript to a file
+            try:
+                transcribed_text = result['text']
+                transcription_filename = os.path.join(transcriptions_folder, f"{video_title}.txt")
+                with open(transcription_filename, "w", encoding="utf-8") as f:
+                    f.write(transcribed_text)
+                    print(f"Saved transcription to: {transcription_filename}")
+
+            except Exception as e:
+                print(f"Error in saving transcript to a file: {e}")
+                # return jsonify??
+
 
         except Exception as yt_error:
             print(f"Error with yt-dlp: {yt_error}")
