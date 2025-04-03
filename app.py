@@ -15,7 +15,6 @@ transcriptions_folder = "transcriptions"
 if not os.path.exists(transcriptions_folder):
     os.makedirs(transcriptions_folder)
 
-
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -70,12 +69,6 @@ def process():
                 
                 print(f"Removed audio file: {audio_filename}")
 
-                return jsonify({
-                    "message": f"Processing video: {video_title}",
-                    "query": user_query,
-                    "transcription": result['text']
-                })
-
             except Exception as whisper_error:
                 print(f"Error with Whisper transcription: {whisper_error}")
                 return jsonify({"error": "Failed to transcribe audio using Whisper."}), 500
@@ -90,9 +83,15 @@ def process():
                     print(f"Saved transcription to: {transcription_filename}")
 
             except Exception as e:
-                print(f"Error in saving transcript to a file: {e}")
-                # return jsonify??
+                print(f"Error saving transcription: {e}")
+                return jsonify({"error": "Failed to save transcription."}), 500
+                
 
+            return jsonify({
+                    "message": f"Processing video: {video_title}",
+                    "query": user_query,
+                    "transcription": result['text']
+                }), 200
 
         except Exception as yt_error:
             print(f"Error with yt-dlp: {yt_error}")
@@ -101,7 +100,6 @@ def process():
     except Exception as e:
         print(f"Error in /process route: {e}")
         return jsonify({"error": "Internal Server Error"}), 500
-
 
 if __name__ == "__main__":
     app.run(debug=True)
