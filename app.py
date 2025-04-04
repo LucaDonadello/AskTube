@@ -2,6 +2,8 @@ from flask import Flask, render_template, request, jsonify
 import yt_dlp
 import os
 import whisper
+import requests
+import json
 
 app = Flask(__name__)
 
@@ -37,7 +39,8 @@ def process():
         try:
             ydl_opts = {
                 'format': 'bestaudio/best',  # Get the best audio format
-                
+                'writesubtitles': True,
+                'writeautomaticsub': True,
                 'noplaylist': True,          # Don't download the entire playlist if URL is a playlist
                 'outtmpl': os.path.join(download_folder, 'audioSource.%(ext)s'),  # Save to the "downloads" folder
                 'quiet': False,
@@ -46,6 +49,21 @@ def process():
                 },
             }
 
+            def extract_plaintext_subtitles(json_text):
+                try:
+                    data = json.loads(json_text)
+                    events = data.get("events", [])
+                    lines = []
+                    for event in events:
+                        segs = event.get("segs")
+                        if segs:
+                            line = "".join(seg.get("utf8", "") for seg in segs)
+                            lines.append(line.strip())
+                    return "\n".join(lines).strip()
+                except Exception as e:
+                    print(f"Error parsing subtitle JSON: {e}")
+                    return None
+
             with yt_dlp.YoutubeDL(ydl_opts) as ydl:
                 print("Starting download process...")
                 info_dict = ydl.extract_info(youtube_link, download=True)
@@ -53,6 +71,33 @@ def process():
                 audio_filename = os.path.join(download_folder, f"audioSource.{info_dict['ext']}")
                 print(f"Video Title: {video_title}")
                 print(f"Downloaded Audio File: {audio_filename}")
+
+                # Check for subtitles or automatic captions
+                subtitles = info_dict.get("subtitles", {})
+                automatic_captions = info_dict.get("automatic_captions", {})
+
+                def fetch_subtitle_text(subs_dict):
+                    if 'en' in subs_dict:
+                        sub_formats = subs_dict['en']
+                        if isinstance(sub_formats, list) and sub_formats:
+                            subtitle_url = sub_formats[0].get('url')
+                            if subtitle_url:
+                                response = requests.get(subtitle_url)
+                                if response.ok:
+                                    return response.text
+                    return None
+
+                raw_subtitles = fetch_subtitle_text(subtitles) or fetch_subtitle_text(automatic_captions)
+
+                if raw_subtitles:
+                    plain_subtitles = extract_plaintext_subtitles(raw_subtitles)
+                    subtitles_path = os.path.join(download_folder, "subtitles.txt")
+                    try:
+                        with open(subtitles_path, "w", encoding="utf-8") as f:
+                            f.write(plain_subtitles if plain_subtitles else raw_subtitles)
+                        print(f"Saved subtitles to: {subtitles_path}")
+                    except Exception as sub_err:
+                        print(f"Failed to save subtitles: {sub_err}")
 
             # Ensure the audio file exists before proceeding
             if not os.path.exists(audio_filename):
@@ -73,7 +118,6 @@ def process():
             except Exception as whisper_error:
                 print(f"Error with Whisper transcription: {whisper_error}")
                 return jsonify({"error": "Failed to transcribe audio using Whisper."}), 500
-            
             
             # Save the transcript to a file
             try:
