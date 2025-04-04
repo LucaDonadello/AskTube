@@ -25,11 +25,11 @@ Run the following commands in your terminal:
 Install the required Python packages:
 - pip install -r requirements.txt
 
-### 4. Configure Script Execution (Windows)
+### 4. Configure Script Execution (Windows) -- OPTIONAL
 Open PowerShell and allow script execution:
 - Set-ExecutionPolicy Unrestricted -Scope Process
 
-### 5. Activate Virtual Environment
+### 5. Activate Virtual Environment -- OPTIONAL
 Activate the virtual environment:
 - AskTube\Scripts\Activate.ps1
 
