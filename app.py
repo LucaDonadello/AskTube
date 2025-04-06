@@ -68,7 +68,7 @@ def process():
                 print("Starting download process...")
                 info_dict = ydl.extract_info(youtube_link, download=True)
                 video_title = info_dict.get('title', 'Unknown Title')
-                audio_filename = os.path.join(download_folder, f"audioSource.{info_dict['ext']}")
+                audio_filename = os.path.join(transcriptions_folder, f"audioSource.{info_dict['ext']}")
                 print(f"Video Title: {video_title}")
                 print(f"Downloaded Audio File: {audio_filename}")
 
