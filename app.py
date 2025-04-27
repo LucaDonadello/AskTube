@@ -14,6 +14,7 @@ preprocessed_text_folder = "preprocessing"
 
 os.makedirs(download_folder, exist_ok=True)
 os.makedirs(transcriptions_folder, exist_ok=True)
+os.makedirs(preprocessed_text_folder, exist_ok=True)
 
 @app.route("/")
 def index():
