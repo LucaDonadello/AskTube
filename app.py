@@ -4,13 +4,17 @@ import os
 import whisper
 import requests
 import json
+import re
 
 app = Flask(__name__)
 
 download_folder = "downloads"
 transcriptions_folder = "transcriptions"
+preprocessed_text_folder = "preprocessing"
+
 os.makedirs(download_folder, exist_ok=True)
 os.makedirs(transcriptions_folder, exist_ok=True)
+os.makedirs(preprocessed_text_folder, exist_ok=True)
 
 @app.route("/")
 def index():
@@ -33,27 +37,44 @@ def process():
 
         if transcription_text:
             save_text(transcription_text, os.path.join(transcriptions_folder, "subtitles.txt"))
+            
+            # Preprocess text
+            preprocessed_text = preprocess_text(transcription_text)
+            
+            # Save preprocessed text
+            save_preprocessed_text(transcription_text, "preprocessed_subtitles.txt")
+            
             clear_download_folder()
+
             return jsonify({
                 "message": f"Processed video with subtitles: {video_title}",
                 "query": user_query,
-                "transcription": transcription_text
+                "transcription": transcription_text,
+                "preprocessed_text": preprocessed_text
             }), 200
 
         # If no subtitles, use Whisper
         transcription_text = transcribe_with_whisper(audio_filename)
         save_text(transcription_text, os.path.join(transcriptions_folder, "transcriptSource.txt"))
+        
+        # Preprocess text (correct function call!)
+        preprocessed_text = preprocess_text(transcription_text)
+        
+        save_preprocessed_text(transcription_text, "preprocessed_transcriptSource.txt")
+
         clear_download_folder()
 
         return jsonify({
             "message": f"Processed video with Whisper: {video_title}",
             "query": user_query,
-            "transcription": transcription_text
+            "transcription": transcription_text,
+            "preprocessed_text": preprocessed_text
         }), 200
 
     except Exception as e:
         print(f"Error in /process route: {e}")
         return jsonify({"error": "Internal Server Error"}), 500
+
 
 
 # -------------------------------
@@ -127,6 +148,23 @@ def save_text(text, filepath):
     with open(filepath, "w", encoding="utf-8") as f:
         f.write(text)
     print(f"Saved file: {filepath}")
+
+
+# preprocess text function
+def preprocess_text(text):
+    text = text.lower()
+    text = re.sub(r"[^a-z0-9\s.,!?]", "", text)
+    text = re.sub(r"\s+", " ", text).strip()
+    return text
+
+#function to save preprocessed text
+def save_preprocessed_text(original_text, filename):
+    preprocessed = preprocess_text(original_text)
+    output_path = os.path.join(preprocessed_text_folder, filename)
+    save_text(preprocessed, output_path)
+    print(f"Saved preprocessed file: {output_path}")
+
+
 
 
 def clear_download_folder():
