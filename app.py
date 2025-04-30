@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, jsonify
-from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM, pipeline
 from collections import Counter
 import torch
 import yt_dlp
@@ -15,14 +15,20 @@ app = Flask(__name__)
 download_folder = "downloads"
 transcriptions_folder = "transcriptions"
 preprocessed_text_folder = "preprocessing"
+summaries_folder = "summaries"
 
 os.makedirs(download_folder, exist_ok=True)
 os.makedirs(transcriptions_folder, exist_ok=True)
 os.makedirs(preprocessed_text_folder, exist_ok=True)
+os.makedirs(summaries_folder, exist_ok=True)
 
 # Load FLAN-T5 or any generative model
 gen_tokenizer = AutoTokenizer.from_pretrained("google/flan-t5-base")
 gen_model = AutoModelForSeq2SeqLM.from_pretrained("google/flan-t5-base")
+
+#summarizer = pipeline("summarization", model="t5-small", tokenizer="t5-small", device=0 if torch.cuda.is_available() else -1)
+
+summarizer = pipeline("summarization", model="facebook/bart-large-cnn", tokenizer="facebook/bart-large-cnn", device=0 if torch.cuda.is_available() else -1) 
 
 @app.route("/")
 def index():
@@ -50,7 +56,15 @@ def process():
             preprocessed_text = preprocess_text(transcription_text)
             
             # Save preprocessed text
-            save_preprocessed_text(transcription_text, "preprocessed_subtitles.txt")
+            preprocessed_filename = "preprocessed_subtitles.txt"
+            save_text(preprocessed_text, os.path.join(preprocessed_text_folder, preprocessed_filename)) # Use preprocessed_text here
+            print(f"Saved preprocessed file: {os.path.join(preprocessed_text_folder, preprocessed_filename)}")
+
+            # Generate Summary
+            summary_text = summarize_text(preprocessed_text)
+            summary_filename = "summary_subtitles.txt"
+            save_text(summary_text, os.path.join(summaries_folder, summary_filename))
+            print(f"Saved summary: {os.path.join(summaries_folder, summary_filename)}")
             
             clear_download_folder()
 
@@ -58,7 +72,8 @@ def process():
                 "message": f"Processed video with subtitles: {video_title}",
                 "query": user_query,
                 "transcription": transcription_text,
-                "preprocessed_text": preprocessed_text
+                "preprocessed_text": preprocessed_text,
+                "summary": summary_text
             }), 200
 
         # If no subtitles, use Whisper
@@ -68,7 +83,16 @@ def process():
         # Preprocess text (correct function call!)
         preprocessed_text = preprocess_text(transcription_text)
         
-        save_preprocessed_text(transcription_text, "preprocessed_transcriptSource.txt")
+        # Save preprocessed text
+        preprocessed_filename = "preprocessed_transcriptSource.txt"
+        save_text(preprocessed_text, os.path.join(preprocessed_text_folder, preprocessed_filename)) # Use preprocessed_text here
+        print(f"Saved preprocessed file: {os.path.join(preprocessed_text_folder, preprocessed_filename)}")
+
+        # Generate Summary
+        summary_text = summarize_text(preprocessed_text)
+        summary_filename = "summary_transcriptSource.txt"
+        save_text(summary_text, os.path.join(summaries_folder, summary_filename))
+        print(f"Saved summary: {os.path.join(summaries_folder, summary_filename)}")
 
         clear_download_folder()
 
@@ -76,7 +100,8 @@ def process():
             "message": f"Processed video with Whisper: {video_title}",
             "query": user_query,
             "transcription": transcription_text,
-            "preprocessed_text": preprocessed_text
+            "preprocessed_text": preprocessed_text,
+            "summary": summary_text
         }), 200
 
     except Exception as e:
@@ -245,6 +270,53 @@ def generate_answer_with_window(question, context, max_chunk_words=150, max_answ
 
     return Counter(answers).most_common(1)[0][0]
 
+def summarize_text(text_to_summarize, max_length=250, min_length=50):
+    """
+    Generates a summary for the given text using the loaded summarization pipeline.
+    Handles length issues by chunking the text into fixed token sizes.
+    """
+    tokenizer = summarizer.tokenizer
+
+    max_chunk_token_length = 800 # Size of chunks in tokens
+
+    # Tokenize the entire input text
+    print("Tokenizing the entire text...")
+    input_ids = tokenizer.encode(text_to_summarize, return_tensors="pt")[0] # Get token IDs
+    total_tokens = len(input_ids)
+    print(f"Total tokens in input: {total_tokens}")
+
+    chunks = []
+    # Create chunks based on token count
+    for i in range(0, total_tokens, max_chunk_token_length):
+        chunk_ids = input_ids[i:i + max_chunk_token_length]
+        # Decode the token IDs back to text for the summarizer
+        chunk_text = tokenizer.decode(chunk_ids, skip_special_tokens=True)
+        if chunk_text and not chunk_text.isspace(): # Avoid empty chunks
+            chunks.append(chunk_text)
+
+    if not chunks:
+        return "Input text was too short or empty to summarize."
+
+    print(f"Summarizing text split into {len(chunks)} chunk(s) of approx {max_chunk_token_length} tokens each...")
+
+    summaries = []
+    for i, chunk in enumerate(chunks):
+         try:
+             chunk_summary = summarizer(chunk, max_length=max_length, min_length=min_length, do_sample=False, truncation=True)[0]['summary_text']
+             summaries.append(chunk_summary)
+             print(f"Summary for chunk {i+1}/{len(chunks)} generated.")
+         except Exception as e:
+             print(f"Error summarizing chunk {i+1}: {e}")
+             print(f"Problematic chunk (first 500 chars): {chunk[:500]}...")
+             summaries.append("[Error summarizing this chunk]")
+
+    # Concatenate the summaries from all chunks
+    final_summary = " ".join(summaries)
+    return final_summary
 
 if __name__ == "__main__":
+    device = "cuda" if torch.cuda.is_available() else "cpu"
+    print(f"Using device: {device}")
+    gen_model.to(device)
+
     app.run(debug=True)
