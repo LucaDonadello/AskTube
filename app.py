@@ -1,10 +1,14 @@
 from flask import Flask, render_template, request, jsonify
+from transformers import AutoTokenizer, AutoModelForSeq2SeqLM
+from collections import Counter
+import torch
 import yt_dlp
 import os
 import whisper
 import requests
 import json
 import re
+
 
 app = Flask(__name__)
 
@@ -15,6 +19,10 @@ preprocessed_text_folder = "preprocessing"
 os.makedirs(download_folder, exist_ok=True)
 os.makedirs(transcriptions_folder, exist_ok=True)
 os.makedirs(preprocessed_text_folder, exist_ok=True)
+
+# Load FLAN-T5 or any generative model
+gen_tokenizer = AutoTokenizer.from_pretrained("google/flan-t5-base")
+gen_model = AutoModelForSeq2SeqLM.from_pretrained("google/flan-t5-base")
 
 @app.route("/")
 def index():
@@ -74,7 +82,42 @@ def process():
     except Exception as e:
         print(f"Error in /process route: {e}")
         return jsonify({"error": "Internal Server Error"}), 500
+    
+# @app.route("/answer", methods=["POST"])
+# def answer():
+#     try:
+#         data = request.get_json()
+#         question = data.get("question")
+#         context = data.get("context")
 
+#         if not question or not context:
+#             return jsonify({"error": "Missing question or context"}), 400
+
+#         answer = generate_answer_with_window(question, context)
+#         return jsonify({"answer": answer}), 200
+
+#     except Exception as e:
+#         print(f"Error in /answer route: {e}")
+#         return jsonify({"error": "Internal Server Error"}), 500
+
+# FOR TESTING PURPOSES ONLY 
+# ---------------------------
+
+@app.route("/answer", methods=["GET"])
+def answer():
+    question = request.args.get("question")
+    context = request.args.get("context")
+
+    if not question or not context:
+        return jsonify({"error": "Missing question or context"}), 400
+
+    answer = generate_answer_with_window(question, context)
+    return jsonify({"answer": answer}), 200
+
+# TEST: http://127.0.0.1:5000/answer?question=Who%20developed%20the%20theory%20of%20relativity%3F&context=The%20theory%20of%20relativity%2C%20developed%20by%20Albert%20Einstein%20in%20the%20early%2020th%20century%2C%20revolutionized%20our%20understanding%20of%20space%2C%20time%2C%20and%20gravity.%20It%20consists%20of%20two%20parts%3A%20special%20relativity%20and%20general%20relativity.%20Special%20relativity%20deals%20with%20the%20physics%20of%20objects%20moving%20at%20constant%20speeds%2C%20particularly%20those%20approaching%20the%20speed%20of%20light.%20General%20relativity%20extends%20this%20to%20include%20gravity%20and%20acceleration%2C%20proposing%20that%20massive%20objects%20cause%20a%20curvature%20in%20spacetime.%20These%20ideas%20have%20been%20confirmed%20by%20numerous%20experiments%20and%20have%20led%20to%20technologies%20like%20GPS%2C%20which%20rely%20on%20relativistic%20corrections%20to%20maintain%20accuracy.
+
+
+# -------------------------------
 
 
 # -------------------------------
@@ -164,9 +207,6 @@ def save_preprocessed_text(original_text, filename):
     save_text(preprocessed, output_path)
     print(f"Saved preprocessed file: {output_path}")
 
-
-
-
 def clear_download_folder():
     for filename in os.listdir(download_folder):
         file_path = os.path.join(download_folder, filename)
@@ -176,6 +216,35 @@ def clear_download_folder():
                 print(f"Deleted: {file_path}")
         except Exception as e:
             print(f"Failed to delete {file_path}: {e}")
+
+# -------------------------------
+#       NLP FUNCTIONS
+# -------------------------------
+
+def generate_answer_with_window(question, context, max_chunk_words=150, max_answer_tokens=64):
+    # Break context into word chunks
+    words = context.split()
+    chunks = [
+        " ".join(words[i:i + max_chunk_words])
+        for i in range(0, len(words), max_chunk_words)
+    ]
+    
+    # Generate answers per chunk
+    answers = []
+    for chunk in chunks:
+        prompt = f"Question: {question}\nContext: {chunk}"
+        inputs = gen_tokenizer(prompt, return_tensors="pt", truncation=True)
+        outputs = gen_model.generate(
+            inputs["input_ids"],
+            max_new_tokens=max_answer_tokens,
+            num_beams=4,
+            early_stopping=True
+        )
+        answer = gen_tokenizer.decode(outputs[0], skip_special_tokens=True)
+        answers.append(answer)
+
+    return Counter(answers).most_common(1)[0][0]
+
 
 if __name__ == "__main__":
     app.run(debug=True)
