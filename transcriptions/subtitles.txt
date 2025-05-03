@@ -1,959 +1,605 @@
-data structures are super important to
+hey and welcome to another data
 
-know for technical coding interviews and
+structures lesson and today we are going
 
-computer science in general and so in
+to be going over
 
-this video I'm going to be breaking down
+hash maps so let's get started
 
-some of the most popular data structures
+all right so the first thing you want to
 
-out there what they look like and how
+know is what are we talking about when
 
-they operate real world examples so you
+we
 
-can actually picture what I'm talking
+talk about hash maps so first off what
 
-about plus their time complexities but
+is a map
 
-more on that later and if you're new
+well map is just an abstract data type
 
-here hi my name is zad I have a
+which basically means it's just an
 
-bachelor's and Masters in computer
+interface
 
-science from Georgia Tech I have
+that allows for multiple implementations
 
-software engineering experience working
+okay and hashmap is one of those
 
-at top tech companies like Amazon and
+implementations
 
-every single day I help hundreds of
+of a map now a map by itself
 
-thousands of people break into Tech
+just uses key value pairs to store data
 
-before we get into any particular
+in an associative array okay so in the
 
-particular data structure we do need to
+back
 
-understand one big concept called Big O
+um in the background of it it's just an
 
-this is our way of measuring speed and
+array all right
 
-efficiency how well data structures are
+and each of those indexes in the array
 
-actually operating in different
+or what we call a bucket
 
-scenarios for example if I'm in New York
+and a bucket can hold a collection of
 
-and I want to go to California I could
+key value pairs each index is a
 
-walk there it might take me a month I
+collection of key value pairs
 
-could bike there in a couple weeks I
+okay so then what do what does the hash
 
-could drive there in a few days or I
+mean
 
-could fly there in just a few hours
+in hash map well hash is
 
-different vehicles are optimized for
+the hash in hashmap stands for hashing
 
-different scenarios just like different
+and that's just a way to map
 
-data structures are also optimized for
+keys to the indexes in the map
 
-different scenarios but for vehicles we
+using what's called a hashing function
 
-measured the by Miles hour but for the
+which we'll get into
 
-speed of data structures and how they
+okay all right so hashing
 
-operate we use time complexity or Big O
+uh now in a map we so
 
-notation if you're not understanding
+because it's an array in the background
 
-this let me break down four different
+that means it's a finite size right
 
-types of Big O notation first one we got
+so it goes from zero to n minus one
 
-o of one constant time this is the
+where n is the size of the array so if
 
-fastest an algorithm can operate think
+we have an array of four
 
-like rocket ship speed of light o of one
+then the indexes would be zero one two
 
-means the operation takes the same
+three okay
 
-amount of time no matter how much data
+and one thing to note about hashmap is
 
-there is imagine you have a grocery list
+the keys don't have to be integer values
 
-and you want to grab just the first item
+all right there are um the hash function
 
-on the list whether that list is five
+takes care of that if it's not an
 
-items 500 items 5,000 items the
+integer and converts it to
 
-operation is the same exact thing you
+an integer okay so just keep that in
 
-just need to take the first one
+mind it doesn't have to be an integer
 
-instantly there's no extra effort
+one other important thing when talking
 
-despite how long the list is so it's
+about hashmaps is
 
-super fast and super efficient a level
+collisions all right so we want to
 
-above that we have o of n linear time
+minimize collisions
 
-where n in this case represents the
+so what is a collision if we have two
 
-amount of data that we have this is
+different keys
 
-still a pretty fast operation so you can
+that go through the hash function which
 
-imagine not speed of light but like
+we'll talk about
 
-superar and specifically o of n this is
+and returns an integer will that integer
 
-when the amount of data increases the
+becomes the index
 
-time it takes grows at that same rate
+in the associative array well if two
 
-for example if you have a list of names
+different keys come out with the same
 
-and you need to find a specific name the
+index
 
-worst case is you have to check every
+that means we're trying to put them into
 
-single name until you find that name if
+the same bucket in the array that's
 
-you have a list of 10 names you might
+called a collision
 
-have to do 10 checks if there are a
+okay and we'll get into that all right
 
-th000 names you might have to do 1,000
+so there are two
 
-checks we don't know the position in the
+important functions when we're talking
 
-list like we did for the O of one
+about um
 
-scenario and so as the data increases in
+about the hash function it are two
 
-size it takes longer cuz there's just a
+components when we're talking about hash
 
-longer operation just more to deal with
+function the first one is the hash
 
-but it's a very predictable increase a
+code and the second one is the
 
-level above that we have quadratic time
+compression function
 
-o of n s think of biking from New York
+all right so let's look at an example
 
-to California I mean like very very slow
+now
 
-and this happens when every single item
+so say we have um a an array of size six
 
-in a data set needs to interact with
+so indexes zero through five so this is
 
-every other item imagine you have a
+our hash map
 
-classroom full of students and each
+okay this is the starting array size for
 
-student has to shake hands with every
+our hashmap
 
-other student if there are 10 students
+now let's say we want to insert so well
 
-that means 10 * 10 100 handshakes if
+the correct
 
-there are 100 students that is 100 * 100
+method is put that's typically how
 
-10,000 handshakes the amount of work
+specifically the function call is called
 
-this operation has to go through grows
+put
 
-way too fast the more students that are
+so you can put a key value pair where
 
-added into the mix and if you have an
+the key is 5 and the value
 
-algorithm that takes o of n^2 time
+value is a so what hash map does it puts
 
-complexity just know that's a really
+it into this hash function
 
-slow really bad algorithm and chances
+which is composed of two components like
 
-are there's a better scenario now the
+we just talked about
 
-fourth scenario I want to talk about is
+so the first one is the hash code so
 
-a slight curve ball and that is O of log
+hash code takes in one parameter and
 
-n logarithmic time and this one is
+that's the key so in this case it's a
 
-faster than o of n but slower than o of
+five
 
-one so it's not the speed of light it's
+all right i'm just using integer values
 
-like the speed of sound it's still
+but again it doesn't have to be an
 
-really fast an example for you to
+integer value
 
-understand this is Imagine trying to
+and so it takes in the key
 
-look up a word in the dictionary
+whatever that key is it turns it into an
 
-typically if you have like a random word
+integer
 
-what people generally do is they open up
+and now that stores say the variable i
 
-the dictionary to the middle somewhere
+is equal to some integer that that hash
 
-in the middle and from there you decide
+code produced
 
-does the word I'm looking for come
+then
 
-before or after the current page I'm on
+then what happens is that integer
 
-and so depending on that you'll jump
+doesn't have to be
 
-forward or backward and you'll repeat
+within the range of the array size yet
 
-that process until you find your desired
+it could be negative
 
-word each time we're jumping Pages we're
+or it could be bigger than the array
 
-cutting the amount of time that we're
+size so right here the size is six
 
-looking in our search by a half we're
+uh if the number if the index that the
 
-not going through every single page in a
+integer that just produces seven
 
-dictionary that would be o of n but
+that's bigger than the array size so we
 
-rather we're going half and then half of
+so it won't be able to be inserted into
 
-that half of that and the search space
+one of those indexes because it's
 
-of the operation just gets smaller and
+larger so you get like an out of bounds
 
-smaller and actually if you look at a
+exception okay
 
-logarithm graph at a certain point as
+um so that's where the compression
 
-you keep increasing the input the
+function comes in
 
-difference in the output is so small and
+we take the output integer from the hash
 
-so marginal and so these are the
+code so the integer the variable i
 
-different time complexities that
+we insert that into the compression
 
-different data structures can have and
+function
 
-now that we understand how things are
+and all that does is it up it now
 
-getting measured let's start off with
+converts
 
-our first data structure and we're going
+makes sure that that integer value is in
 
-to be talking about the array think of
+the range
 
-an array like a row of middle school
+of the array so here would be 0 and 5
 
-lockers each Locker has a fixed position
+okay so it's going to be in the range of
 
-and you can quickly go to any one of
+0
 
-them just by knowing its number arrays
+and 5. all right um
 
-store data in a contiguous manner
+so let's take uh so now let's look at
 
-meaning all elements are placed side by
+what can happen
 
-side by side in memory because each
+if uh we have a collision okay which is
 
-element has a specific index retrieving
+whenever we try to have the same
 
-a value is extremely fast and you can go
+or two different keys into the same
 
-directly to its position without like
+index all right
 
-searching however if the array is
+so here we already know that we have
 
-already full and you want to add a new
+that we tried to insert
 
-element that can be a little tricky cuz
+um the key value pair 5a
 
-you can't just squeeze another item it's
+and we tried to put it through the hash
 
-a fixed size just like you can't add a
+function and it came out
 
-new Locker you might have to break down
+with the value of one as the integer so
 
-a wall similarly you need to create a
+that one
 
-new larger array and all existing
+means that we inserted that into the
 
-elements must be copied over and then
+corresponding index in the array
 
-the new element can be added but there
+which is index one okay so that's where
 
-is a structure that's similar to an
+it's stored right here
 
-array that handles this resizing a
+now let's say we have another key value
 
-little bit better if you know which one
+pair we want to insert
 
-I'm talking about and why it's better
+in this case um it's to
 
-let me know in the comments down below
+the key value pair to b and it just so
 
-and I might give you a shout out in my
+happens this is
 
-next video in terms of time complexities
+i don't know if this is correct or not
 
-accessing any element by an index is an
+this is just an example all right
 
-O of one operation so it's super
+to show you what how to deal with the
 
-efficient inserting an element at a
+collision
 
-position is also o of one if you're
+so let's say we insert the keyboard pair
 
-simply replacing an existing item but
+to b
 
-inserting a value beyond the array side
+and the output after going through the
 
-requires creating a whole another array
+hash code and the compression function
 
-which takes o of n time cuz you have to
+is one as the integer okay so that means
 
-copy over a whole array deleting an
+that we now need to put
 
-element is also o of nend because once
+this key value pair into the same index
 
-an element is removed all subsequent
+that's already occupied
 
-elements must shift down to maintain the
+by 5 the key value pair 5a
 
-array's contiguous structure unless
+this is a collision because something
 
-you're deleting at the very end of the
+already exists there and we're trying to
 
-array in that case it's an O of one
+put something else there
 
-because you're just removing the last
+now there are different ways to handle
 
-element and there's no shifting
+this
 
-downwards the next data structure we're
+because you want to think about worst
 
-going to be talking about is the linked
+case scenarios right if all key value
 
-list think of a linked list like a train
+players go into the same bucket and you
 
-where each car is connected to the next
+have to search for it
 
-one if you if you want to reach a
+you know there's another data structure
 
-specific car you can't just teleport to
+behind there's a lot of time like i'll
 
-it you have to start from the front and
+talk about one now
 
-move through each car until you find the
+like singly linked list all right so the
 
-one that you need in link list each
+worst case scenario is you have to
 
-element is stored in a separate node and
+traverse all the way to the end of the
 
-each node contains both a value and a
+singly link list just to retrieve
 
-pointer to the next node in the sequence
+one value okay so
 
-this makes link list more flexible than
+and then we have all this extra space
 
-arrays since you can easily add or
+that's not even occupied
 
-remove elements without worrying about
+so a topic of discussion
 
-shifting everything around however
+that could be its own video is how to
 
-accessing specific elements is slower
+deal with collisions
 
-because you have to Traverse the list
+now there are there are a couple ways
 
-from the beginning to find it so in
+all right so again we have the same key
 
-terms of time comple
+value pairs we just used all right
 
-accessing an element by an index is an O
+the first one or there's several ways
 
-of n operation because you actually have
+but i'm going to talk about two of them
 
-to go through the list there's no index
+so the first one
 
-inbuilt into the link list inserting an
+is called separate chaining now what
 
-element at a position is an O of one
+this means
 
-operation if you already have reference
+is that like we just said we have a
 
-to the node that you're trying to insert
+singly linked list for each
 
-around but if you actually have to
+bucket okay so now this means that we
 
-search for it once again you're
+can have multiple
 
-traversing the list so that's going to
+key value pairs for each bucket
 
-be an O of n operation deleting an
+and what this there's a couple things
 
-element similar to inserting is O of one
+that this allows us to do first off is
 
-if you have the right reference because
+we don't have to worry about the sazi
 
-all you have to do is just switch around
+array
 
-the pointers but if you have to search
+because we never have to increase it
 
-for that reference it's an O of n
+right we never have to worry about it
 
-operation once again the nice thing is
+because if if it happened that this was
 
-unlike an array deleting from a linked
+filled up
 
-list doesn't require shifting elements
+and these that weren't didn't allow we
 
-around so sometimes it can be a little
+didn't allow
 
-more efficient in this type of use case
+key value pairs to collide in the same
 
-plus there's also no resizing issue
+bucket then you'd have to increase the
 
-because it's just nodes and pointers
+array size
 
-there's no like fixed structures that
+so here we don't have to worry about
 
-you have to deal with the next data
+that because we have a single
 
-structure we're going to talk about is
+list for each bucket in this array we
 
-the stack this is a simple structure
+keep the same size so this will always
 
-that follows a last in first out
+be size of six
 
-principle meaning the last element added
+and anytime there's a collision we just
 
-is the first one to be removed think of
+add it on to the end of the singly link
 
-a stack of chips you have to eat the top
+list
 
-one first before you can e the next one
+and that's it okay that's all we do this
 
-each element in a stack is stored in an
+is one of the easier ones to implement
 
-ordered manner but unlike arrays you can
+and easier to understand okay
 
-only access or modify elements from the
+so that's another one we're gonna talk
 
-top of the stack this makes retrieval
+about is called linear probing
 
-and insertion extremely efficient
+all right this is when um
 
-because there's no shifting around for
+each bucket only holds a single key
 
-the Big O time complexity for a stack
+value pair
 
-there's no accessing really at a
+all right so it this doesn't even allow
 
-particular index because you only take
+collisions all right i mean
 
-or remove from the top itself but if you
+whenever we believe there's going to be
 
-have to access or search through a stack
+a collision it handles it right away and
 
-that would be an O of n operation
+doesn't allow
 
-because you have to go through each
+two key value pairs to occupy the same
 
-element one by one by one there's no
+bucket
 
-indexing inserting an element which is
+so how does that work okay so let's take
 
-called pushing onto the stack is an O of
+a look
 
-one operation because you simply add the
+for an example let's say we have index
 
-element to the top of the stack without
+one two and four filled up
 
-affecting any other structure within the
+with values all right and we wanna
 
-stack deleting an element which is
+insert
 
-called popping from the stack once again
+um two b okay that's the key value pair
 
-is an O of one operation because you
+we wanna insert into the hash map
 
-only have to remove from the top of the
+now what happens here is let's say
 
-element there's no dealing with the
+let's uh oops let me
 
-other elements when you're taking or
+go back one sorry about that uh
 
-removing from a stack so it's highly
+let's say we have 2b and we want to
 
-efficient for adding or removing plus
+insert it
 
-it's very widely used in depth for
+into the hashmap and it outputs the
 
-search but more on that later the next
+index
 
-data structure we're going to talk about
+an integer of one which corresponds to
 
-is the Q and unlike a stack that was
+the index in the associative array
 
-last and first out this is a first and
+okay well that's occupied by the value a
 
-first out which means the first element
+so it can't go there all right so what's
 
-added is the first element to be removed
+going to do is going to say okay what's
 
-think of it when you're standing in line
+the next
 
-at the store the person at the front
+indexed well the next index is two well
 
-gets to the checkout first and then they
+that's also
 
-get dealt with first any new people that
+occupied okay so move on to the next one
 
-want to join the line has to join in in
+what's the next one
 
-the back and must wait their turn till
+that's index three and that's not
 
-they come to the front each element in a
+occupied
 
-queue is stored in an ordered manner but
+so it just found an empty index and we
 
-unlike an array which is also ordered
+can insert
 
-these elements can be added only in the
+um the value b into this hash map
 
-back and removed in the front for the
+okay all right
 
-Big O time complexity of a que just like
+so that's that's the basics of how
 
-a stack you can't access element by
+hashmap works okay so again
 
-their index but for some reason if you
+we whenever you want to insert anything
 
-have to go through the whole queue to
+to the hash map
 
-find a certain element that would be an
+the all this does it goes through the
 
-O of n operation to access or search if
+hash function which is two components
 
-you're not just trying to access the
+it is the hash code which converts
 
-first element there in terms of
+whatever
 
-insertion or deltion those are o of one
+an arbitrary key into an integer value
 
-operations because you add to the back
+that could be negative or could be
 
-remove from the front and it's just
+larger than the initial array
 
-continuous think of a stack but in
+or the array for the hashmap so then we
 
-slight reverse order plus qes are highly
+have to do the compression function
 
-used in breath th search and Spotify
+which means we put it in
 
-music the next data structure we're
+we make sure it's between zero and the
 
-going to talk about is the Heap or
+size of the array
 
-priority CU think of a heap like a
+and then there are ways to handle
 
-pyramid of stacked boxes where the
+collisions when we have two
 
-smallest Box is always at the very top
+different key value pairs going into
 
-you don't randomly grab a box from the
+the same bucket in the hash map all
 
-middle you always take from the top but
+right and
 
-specifically for heaps they actually
+we want to try and eliminate collisions
 
-always need a box to be at the top like
+um to make it easier to look to search
 
-if any boxes are removed within the
+or
 
-pyramid they need to readjust so there's
+remove or other operations that are
 
-a box still at the top so it can
+performed on a hashmap
 
-maintain that structure also there are
+okay all right if you guys have any
 
-two types of heaps that you need to know
+questions leave them in the comments
 
-first is a Min Heap where every parent
+below
 
-is smaller than its children and the top
+and i will do my best to answer them and
 
-element is the smallest while in a Max
+help you understand
 
-Heap every parent is larger than its
-
-children and the top element is the
-
-largest for efficiency accessing an
-
-element by its index is not a general
-
-operation but if needed it would be o of
-
-one to access the top element which we
-
-call the root and O of n for any
-
-arbitrary elements within the Heap
-
-inserting an element is a o of login
-
-procedure because first it's added into
-
-the Heap and then because of the Heap
-
-property of the parent child ration ship
-
-being bigger or smaller it bubbles up to
-
-its right position similarly removing is
-
-also o of login because it removes the
-
-elements and then bubbles down to
-
-restore the Heap property and since
-
-heaps are actually balanced binary trees
-
-which more on that later both insertion
-
-and deletion operations are extremely
-
-efficient compared to linear data
-
-structures like arrays or link lists
-
-which we talked about the next data
-
-structure we're going to talk about is
-
-the hashmap and make sure you know this
-
-one think of a hashmap like a mail room
-
-in an office where every empy employee
-
-has a dedicated mailbox instead of
-
-sorting through all the mail one by one
-
-by one you just look oh John his mailbox
-
-is number four Sally her mailbox is
-
-number five you know exactly where to
-
-put it and John and Sally know exactly
-
-where to access it a hashmap stores data
-
-using key value pairs where each key is
-
-run through a hash function that
-
-determines where the value should be
-
-stored an example of a hash function
-
-could be the length of a string so
-
-John's name for example is four
-
-characters long so he's in position four
-
-Sally is in position five her name is
-
-five characters long this makes lookups
-
-on hash Maps extremely efficient time
-
-complexity wise being 0 of one however
-
-if too many items hash to the same
-
-mailbox which we call a hash Collision
-
-for example if a new employee Andy joins
-
-well his name is also four letters we
-
-can't just put him in position number
-
-four because that's where JN is so we
-
-need to have a hash Collision resolution
-
-which could be a linkless chaining from
-
-the hashmap position or it could be
-
-linear probing where you find the next
-
-available position either way this is
-
-the only real downside to hashmaps
-
-otherwise they are super super efficient
-
-as a data structure so overall accessing
-
-an element by its key in a hashmap is an
-
-O of one operation but it could be o of
-
-n worst case if everything is put onto
-
-that link list and you have to do a lot
-
-of searching inserting an element is an
-
-O of one operation but worst case
-
-scenario that could end up being o ofen
-
-deleting an element is also an O of one
-
-operation because if you have the right
-
-key you can just go to the value but if
-
-there is a long length list that you
-
-have to deal with to find the actual
-
-element that you're dealing with that
-
-could end up being an O of end operation
-
-by the way if you use Python you
-
-probably call hashmaps dictionaries but
-
-they're pretty much the same thing the
-
-next data structure we're going to talk
-
-about is the binary search tree so it's
-
-a tree it looks similar to a family tree
-
-but the key difference is each node
-
-follows a specific ordering rule the
-
-left child has to contain values smaller
-
-than the parent and the right child has
-
-to contain values greater than the
-
-parent this makes searching insertion
-
-and deletion extremely efficient in
-
-terms of the Big O accessing inserting
-
-and deleting into a binary search tree
-
-is an O of login procedure because of
-
-the rules of the left parent and right
-
-needing to be less than one another
-
-while we're dealing with the elements
-
-every time we look to access an element
-
-insert an element or delete an element
-
-you can literally eliminate half the
-
-tree as we're going through it so it's
-
-like going through the dictionary trying
-
-to find that word because you're just
-
-splitting up your search Space by half
-
-every layer that you're going but worst
-
-case if your binary search tree is
-
-unbalanced for some reason and it looks
-
-something something similar to a link
-
-list each of those operations access
-
-insertion and deletion becomes o of n
-
-because you might have to go through
-
-each element there's no elimination of
-
-search space the next data structure
-
-we're going to talk about is the set and
-
-I want you to think of this like
-
-thanos's Infinity Gauntlet it can hold
-
-powerful stones but each stone is unique
-
-if Thanos tries to add the same Stone
-
-twice it simply won't work because the
-
-gauntlet can only allow one of each kind
-
-also the order in which he collects the
-
-stones doesn't matter matter at all as
-
-long as like he has all the stones in
-
-whatever order they're all unique it'll
-
-be good sets are very useful if you're
-
-searching through trees or you're
-
-searching through graphs and you want to
-
-keep track of if you visited a certain
-
-node or not and overall the definition
-
-of a set is an unordered collection of
-
-unique elements typically implemented
-
-using a hash table similarly the
-
-efficiency of a hash map with the hash
-
-function this makes checking for the
-
-existence of an element extremely fast
-
-which means 0 of one on average time
-
-however similar to all the issues that
-
-we had with the hash function and the
-
-hash Maps causing potential collisions
-
-that can take it all the way up to O of
-
-n unlike a razor link list sets don't
-
-store duplicates and they don't maintain
-
-a specific order and in fact they're
-
-actually used for a lot of coding
-
-interview questions such as removing
-
-duplicates from a link list removing
-
-duplicates from a data set or checking
-
-for a certain membership or performing
-
-mathematical set operations so make sure
-
-you know your sets because it's never
-
-going to be the main data structure but
-
-it's always going to be something to
-
-have in handy just like thanos's
-
-Gauntlet in terms of the Big O time
-
-complexity in inserting and deleting are
-
-going to be o of one operations because
-
-of the whole hash function but if
-
-there's so many cash collisions once
-
-again it's going to be o ofn worst case
-
-just like it was for the hashmap and
-
-that's if the case is it's run by hash
-
-tables in the background there are
-
-various other ways to create sets I just
-
-gave you an example of a hash set and if
-
-you're interested in leveling up your
-
-career applying your data structures
-
-knowledge two actual leite code problems
-
-that show up in top Tech interviews for
-
-companies like Amazon or Google you
-
-might want to check out my newsletter
-
-down below where I'm going to send you
-
-guys links for popular leak code
-
-Problems by each company for different
-
-data structures so you guys can practice
-
-and really get ahead of the game well
-
-that's about all I have in this video I
-
-really hope that you guys enjoyed it and
-
-if you did make sure to hit the like
-
-button subscribe if you haven't already
-
-and now if you're interested in landing
-
-a software engineering internship for
-
-summer of 2025 check out this video
-
-right here
+even further okay all right thank you

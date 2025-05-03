@@ -276,10 +276,9 @@ def clear_download_folder():
 
 def generate_answer_with_window(question, context, max_chunk_words=150, max_answer_tokens=128):
     """
-    Generates a more natural and informative answer to a question based on the context.
-    The answer should be coherent and concise, resembling GPT-style responses.
+    Generates a natural, detailed answer to a question based on overlapping context chunks.
+    The final answer is limited to one paragraph, up to 400 characters.
     """
-    # Split context into chunks with overlap to ensure continuity
     words = context.split()
     step = max(1, max_chunk_words // 2)  # 50% overlap
     chunks = [
@@ -290,24 +289,26 @@ def generate_answer_with_window(question, context, max_chunk_words=150, max_answ
     if not chunks:
         return "Context was empty or too short to process."
 
-    # Generate answers for each chunk
     answers = []
     print(f"Generating answers for {len(chunks)} chunk(s)...")
     for i, chunk in enumerate(chunks):
-        # Update prompt to guide the model more naturally
-        prompt = f"Provide a clear and concise answer to this question: {question}. Based on this context: {chunk}."
+        prompt = (
+            f"Answer the following question using only the information in the context. "
+            f"Write a clear, detailed paragraph no longer than 400 characters.\n\n"
+            f"Question: {question}\n\n"
+            f"Context: {chunk}"
+        )
+
         inputs = gen_tokenizer(prompt, return_tensors="pt", truncation=True, max_length=512).to(gen_model.device)
 
         try:
             outputs = gen_model.generate(
                 inputs["input_ids"],
                 max_new_tokens=max_answer_tokens,
-                num_beams=4,  # Beam search to enhance coherence
+                num_beams=4,
                 early_stopping=True
             )
             answer = gen_tokenizer.decode(outputs[0], skip_special_tokens=True).strip()
-
-            # Allow natural answers and ignore redundant phrases
             if len(answer) > 2 and answer.lower() not in [
                 "i don't know", "not mentioned", "no information found", "context does not provide information"
             ]:
@@ -320,14 +321,21 @@ def generate_answer_with_window(question, context, max_chunk_words=150, max_answ
     if not answers:
         return "I couldn't find a clear answer in the context provided."
 
-    # Choose the most relevant answer by considering all the generated answers
-    best_answer = max(answers, key=len)  # Prefer the longest (most detailed) answer
+    # Choose most detailed answer (favoring length)
+    best_answer = max(answers, key=len)
 
-    # Ensure the answer is concise, but not overly restrictive
-    if len(best_answer) > 100:
-        best_answer = best_answer[:100] + "..."  # Truncate at 100 characters with ellipsis
+    # Post-process to limit to ~400 characters, preserving sentence integrity
+    if len(best_answer) > 400:
+        # Truncate at the last full sentence within 400 characters
+        truncated = best_answer[:400]
+        last_period = truncated.rfind('.')
+        if last_period != -1:
+            best_answer = truncated[:last_period + 1]
+        else:
+            best_answer = truncated.strip() + "..."
 
     return best_answer
+
 
 
 def summarize_text(text_to_summarize, max_length=250, min_length=50):
