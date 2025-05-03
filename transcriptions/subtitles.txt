@@ -1,667 +1,959 @@
-in this video I'm going to reveal the
+data structures are super important to
 
-Chinese secret to saving money now I've
+know for technical coding interviews and
 
-gotten a lot of these money saving tips
+computer science in general and so in
 
-from my dad who's your typical good with
+this video I'm going to be breaking down
 
-money Chinese person and I want to share
+some of the most popular data structures
 
-with you those today people sometimes
+out there what they look like and how
 
-will ask me if I'm half asian but I'm
+they operate real world examples so you
 
-actually 100 Chinese and my mom is from
+can actually picture what I'm talking
 
-Beijing my dad is from Shanghai and I've
+about plus their time complexities but
 
-done many trips to China including two
+more on that later and if you're new
 
-six-month stretches both in Hong Kong
+here hi my name is zad I have a
 
-and in Beijing and many trips in between
+bachelor's and Masters in computer
 
-so sit back nihaw women's
+science from Georgia Tech I have
 
-the most stunning fact about the Chinese
+software engineering experience working
 
-is that in China the gross savings rate
+at top tech companies like Amazon and
 
-there is 45.9 percent as of December
+every single day I help hundreds of
 
-2021 that means on every hundred dollars
+thousands of people break into Tech
 
-that they bring in they're going to be
+before we get into any particular
 
-saving roughly 46 dollars of that
+particular data structure we do need to
 
-contrast that to the United States where
+understand one big concept called Big O
 
-we have a heavy focus on consumption in
+this is our way of measuring speed and
 
-this country our savings rate is
+efficiency how well data structures are
 
-typically between 3.5 and 5 according to
+actually operating in different
 
-the data so what's the reason for this
+scenarios for example if I'm in New York
 
-big disparity I mean that's almost a
+and I want to go to California I could
 
-factor of 10 that we're talking about
+walk there it might take me a month I
 
-here so why are the Chinese so good at
+could bike there in a couple weeks I
 
-saving money first it's definitely
+could drive there in a few days or I
 
-cultural us As Americans we're always
+could fly there in just a few hours
 
-being hit with sales disc accounts
+different vehicles are optimized for
 
-financing options and the like 80 off
+different scenarios just like different
 
-clothes come on in and I'll give you a
+data structures are also optimized for
 
-free quote and we're always kind of
+different scenarios but for vehicles we
 
-pressured to keep up with our neighbors
+measured the by Miles hour but for the
 
-is this car fifteen thousand dollars
+speed of data structures and how they
 
-yeah it is now a lot of this originated
+operate we use time complexity or Big O
 
-After the post-world War II era it was
+notation if you're not understanding
 
-not long after the Great Depression and
+this let me break down four different
 
-it was deemed patriotic if you were
+types of Big O notation first one we got
 
-actually to consume in America at that
+o of one constant time this is the
 
-time and so they were trying to spur the
+fastest an algorithm can operate think
 
-economy on and I encourage you all to go
+like rocket ship speed of light o of one
 
-shopping more in China it's very
+means the operation takes the same
 
-different they have a heavy emphasis on
+amount of time no matter how much data
 
-saving money because of what money means
+there is imagine you have a grocery list
 
-to them as well as the demographics of
+and you want to grab just the first item
 
-their country you'll also find a heavy
+on the list whether that list is five
 
-aversion to financing things in China
+items 500 items 5,000 items the
 
-oftentimes Chinese people want to buy
+operation is the same exact thing you
 
-things full in cash instead of trying to
+just need to take the first one
 
-finance it and take on debt now if
+instantly there's no extra effort
 
-you're just looking for the Chinese
+despite how long the list is so it's
 
-secret to saving money I'm Gonna Leave a
+super fast and super efficient a level
 
-timestamp down below so that you can
+above that we have o of n linear time
 
-just skip to it if you want however
+where n in this case represents the
 
-right now I'm going to cover the why as
+amount of data that we have this is
 
-to why Chinese people save money because
+still a pretty fast operation so you can
 
-I think it's really interesting and if
+imagine not speed of light but like
 
-you if you understand intrinsically why
+superar and specifically o of n this is
 
-Chinese people want to save money it can
+when the amount of data increases the
 
-help you save money as well so the first
+time it takes grows at that same rate
 
-reason reason why Chinese people like to
+for example if you have a list of names
 
-save money is the meaning of money and
+and you need to find a specific name the
 
-what it means to them so as kids you're
+worst case is you have to check every
 
-taught from a very early age that saving
+single name until you find that name if
 
-money is Honorable kids will often get
+you have a list of 10 names you might
 
-money in these red envelopes for New
+have to do 10 checks if there are a
 
-Year's and birthdays and they are often
+th000 names you might have to do 1,000
 
-encouraged by their parents to save it
+checks we don't know the position in the
 
-this money is referred to as lucky money
+list like we did for the O of one
 
-now money is so important to the Chinese
+scenario and so as the data increases in
 
-that they even have a phrase during the
+size it takes longer cuz there's just a
 
-holidays and new years that they say
+longer operation just more to deal with
 
-instead of happy New Year they say
+but it's a very predictable increase a
 
-something else let's listen to Ronnie
+level above that we have quadratic time
 
-Chang the comedian explain it better
+o of n s think of biking from New York
 
-than I can even during Chinese New Year
+to California I mean like very very slow
 
-the biggest holiday for Chinese people
+and this happens when every single item
 
-Chinese New Year when we see each other
+in a data set needs to interact with
 
-during Chinese New Year the way we greet
+every other item imagine you have a
 
-each other
+classroom full of students and each
 
-is we say
+student has to shake hands with every
 
-in Cantonese I'm sure you've heard that
+other student if there are 10 students
 
-at least perfectly right
+that means 10 * 10 100 handshakes if
 
-means hope you get rich
+there are 100 students that is 100 * 100
 
-[Applause]
+10,000 handshakes the amount of work
 
-that's not
+this operation has to go through grows
 
-happy
+way too fast the more students that are
 
-that's pretty funny because it's also
+added into the mix and if you have an
 
-true you can also see the importance of
+algorithm that takes o of n^2 time
 
-money in the way that people in Chinese
+complexity just know that's a really
 
-Society treat other people with a lot of
+slow really bad algorithm and chances
 
-money people with a lot of money in
+are there's a better scenario now the
 
-Chinese culture are deemed successful in
+fourth scenario I want to talk about is
 
-many people's eyes and so it's often
+a slight curve ball and that is O of log
 
-viewed as a good thing to have a lot of
+n logarithmic time and this one is
 
-money now being successful also has its
+faster than o of n but slower than o of
 
-other perks in China and that actually
+one so it's not the speed of light it's
 
-brings me to my next point which is
+like the speed of sound it's still
 
-demographics up until 2016 China
+really fast an example for you to
 
-actually had a one child policy that was
+understand this is Imagine trying to
 
-implemented in the late 70s and early
+look up a word in the dictionary
 
-80s to kind of stem overpopulation and
+typically if you have like a random word
 
-that means each family could have one
+what people generally do is they open up
 
-child so now if you had more than one
+the dictionary to the middle somewhere
 
-child you would just be slapped with a
+in the middle and from there you decide
 
-fine and in addition if you didn't pay
+does the word I'm looking for come
 
-that fine your household would not be
+before or after the current page I'm on
 
-able to register your second child's
+and so depending on that you'll jump
 
-name in the household system so your
+forward or backward and you'll repeat
 
-second child would not be eligible for
+that process until you find your desired
 
-health care services and other services
+word each time we're jumping Pages we're
 
-like education so naturally this one
+cutting the amount of time that we're
 
-child policy created a sharp decline in
+looking in our search by a half we're
 
-newborns as you can see by this graph
+not going through every single page in a
 
-but also in sex selective abortions in
+dictionary that would be o of n but
 
-China it's usually much more important
+rather we're going half and then half of
 
-to have a boy than a girl because the
+that half of that and the search space
 
-boy usually inherits the family name as
+of the operation just gets smaller and
 
-well as the property so what you had was
+smaller and actually if you look at a
 
-a lot of people kind of using
+logarithm graph at a certain point as
 
-contraception in a way that they would
+you keep increasing the input the
 
-avoid female bursts and try to optimize
+difference in the output is so small and
 
-for mail bursts and with that
+so marginal and so these are the
 
-contraception actually it skewed the
+different time complexities that
 
-population having more males than
+different data structures can have and
 
-females over time so at its worst it was
+now that we understand how things are
 
-122 males for every 100 females that
+getting measured let's start off with
 
-were born now in general terms if you
+our first data structure and we're going
 
-have more men than women than you have a
+to be talking about the array think of
 
-supply and demand issue right so there's
+an array like a row of middle school
 
-more men chasing the same amount of
+lockers each Locker has a fixed position
 
-women so basically to stand out as a man
+and you can quickly go to any one of
 
-in China you have to be viewed as
+them just by knowing its number arrays
 
-successful AKA you probably have a lot
+store data in a contiguous manner
 
-of money the other thing with the one
+meaning all elements are placed side by
 
-child policy was that since families
+side by side in memory because each
 
-were only having one child they weren't
+element has a specific index retrieving
 
-having multiple kids in the majority of
+a value is extremely fast and you can go
 
-cases that means that the parents could
+directly to its position without like
 
-save more money because they didn't have
+searching however if the array is
 
-multiple kids to feed so you kind of had
+already full and you want to add a new
 
-a double whammy with the one child
+element that can be a little tricky cuz
 
-policy you had parents not having to
+you can't just squeeze another item it's
 
-spend as much money and then the males
+a fixed size just like you can't add a
 
-trying to save as much money to become
+new Locker you might have to break down
 
-desirable another reason for saving in
+a wall similarly you need to create a
 
-China is that there's no 401K there's no
+new larger array and all existing
 
-Ira there's no retirement accounts that
+elements must be copied over and then
 
-Chinese people can contribute to rather
+the new element can be added but there
 
-they do have what's called a pension
+is a structure that's similar to an
 
-system but still many people in China
+array that handles this resizing a
 
-are wary that the pension system will
+little bit better if you know which one
 
-still be around when they retire and so
+I'm talking about and why it's better
 
-they also worry about the cost of
+let me know in the comments down below
 
-healthcare education and their own
+and I might give you a shout out in my
 
-pensions so these are some of the main
+next video in terms of time complexities
 
-intrinsic reasons as to why Chinese
+accessing any element by an index is an
 
-people like to save money but let's
+O of one operation so it's super
 
-actually talk about the money secret of
+efficient inserting an element at a
 
-this video the main secret as to why
+position is also o of one if you're
 
-Chinese people are brilliant at saving
+simply replacing an existing item but
 
-money it's not anything crazy it's just
+inserting a value beyond the array side
 
-that they have every dollar accounted
+requires creating a whole another array
 
-for in my particular case my dad would
+which takes o of n time cuz you have to
 
-always know where his money was going at
+copy over a whole array deleting an
 
-all times and there is a special
+element is also o of nend because once
 
-budgeting system that can help you with
+an element is removed all subsequent
 
-this and in America and in the Western
+elements must shift down to maintain the
 
-countries it's called the zero-based
+array's contiguous structure unless
 
-budgeting system the zero-based
+you're deleting at the very end of the
 
-budgeting system is a method in which
+array in that case it's an O of one
 
-you budget where you spend every last
+because you're just removing the last
 
-cent of your monthly income so that your
+element and there's no shifting
 
-amount left at the end of every month is
+downwards the next data structure we're
 
-equal to zero so that means your income
+going to be talking about is the linked
 
-minus your expenses equals zero at the
+list think of a linked list like a train
 
-end of the month now expenses in this
+where each car is connected to the next
 
-case also includes savings Investments
+one if you if you want to reach a
 
-paying off debt Etc let's pretend you
+specific car you can't just teleport to
 
-make four thousand dollars a month a
+it you have to start from the front and
 
-zero-based budget might look like the
+move through each car until you find the
 
-following you have your rents your
+one that you need in link list each
 
-groceries your Necessities all listed
+element is stored in a separate node and
 
-right here but then you also have a
+each node contains both a value and a
 
-section for the things that you're
+pointer to the next node in the sequence
 
-saving for your emergency fund your IRA
+this makes link list more flexible than
 
-your student loan payments new car fund
+arrays since you can easily add or
 
-and then any other savings that you
+remove elements without worrying about
 
-might want to do you can see by the time
+shifting everything around however
 
-that you get to the end of your
+accessing specific elements is slower
 
-budgeting you are left with zero dollars
+because you have to Traverse the list
 
-at the bottom right here this is
+from the beginning to find it so in
 
-essentially the zero based budgeting
+terms of time comple
 
-system where all dollars are accounted
+accessing an element by an index is an O
 
-for you can easily do this budgeting
+of n operation because you actually have
 
-system at home but it also means that
+to go through the list there's no index
 
-you have to be super honest with your
+inbuilt into the link list inserting an
 
-own expenses and sometimes you might
+element at a position is an O of one
 
-have to do this for three months to get
+operation if you already have reference
 
-an average of all your variable expenses
+to the node that you're trying to insert
 
-throughout the three months if you've
+around but if you actually have to
 
-watched some of my videos before you
+search for it once again you're
 
-should know that this budgeting system
+traversing the list so that's going to
 
-doesn't exactly tell you how much you
+be an O of n operation deleting an
 
-should spend for every single category
+element similar to inserting is O of one
 
-rather it kind of helps you understand
+if you have the right reference because
 
-your expenses as a whole including your
+all you have to do is just switch around
 
-fixed expenses and then you can kind of
+the pointers but if you have to search
 
-categorize your expenses and allocate
+for that reference it's an O of n
 
-your budget from there all right there
+operation once again the nice thing is
 
-are four main factors that the Chinese
+unlike an array deleting from a linked
 
-prioritize to help them save a lot of
+list doesn't require shifting elements
 
-money that I want to tell you about
+around so sometimes it can be a little
 
-before we do that though make sure to
+more efficient in this type of use case
 
-drop this video a like and if you enjoy
+plus there's also no resizing issue
 
-economics and business content I want
+because it's just nodes and pointers
 
-you to check out my free newsletter
+there's no like fixed structures that
 
-called hump days that comes out twice a
+you have to deal with the next data
 
-week on Wednesdays and Sundays it's
+structure we're going to talk about is
 
-completely free to sign up and I will
+the stack this is a simple structure
 
-link it down below and I hope to see you
+that follows a last in first out
 
-guys in the newsletter as well all right
+principle meaning the last element added
 
-so the first of the four main factors
+is the first one to be removed think of
 
-that the Chinese do to help them save
+a stack of chips you have to eat the top
 
-money is that they don't indulge in
+one first before you can e the next one
 
-luxury goods or Goods that are just
+each element in a stack is stored in an
 
-there as status symbols the majority of
+ordered manner but unlike arrays you can
 
-Chinese people want to stay humble and
+only access or modify elements from the
 
-they also want to fly under the radar so
+top of the stack this makes retrieval
 
-they usually stay away from these luxury
+and insertion extremely efficient
 
-products number two when the Chinese
+because there's no shifting around for
 
-earn money they usually like to live off
+the Big O time complexity for a stack
 
-a very small percentage of their income
+there's no accessing really at a
 
-now my dad grew up with very little
+particular index because you only take
 
-money as a child in Shanghai there were
+or remove from the top itself but if you
 
-some days that he could not even afford
+have to access or search through a stack
 
-food and he would go to sleep hungry
+that would be an O of n operation
 
-when he was able to afford food all he
+because you have to go through each
 
-could really buy at the time was a plain
+element one by one by one there's no
 
-pastry called the manto and amanto is a
+indexing inserting an element which is
 
-tasteless kind of white bun that you can
+called pushing onto the stack is an O of
 
-buy for very cheap because of this tough
+one operation because you simply add the
 
-childhood when my dad started his career
+element to the top of the stack without
 
-whenever he earned let's say ten dollars
+affecting any other structure within the
 
-he tried to live off of one single
+stack deleting an element which is
 
-dollar now in reality was he able to
+called popping from the stack once again
 
-live off of one dollar for every ten
+is an O of one operation because you
 
-dollars that he earned not really there
+only have to remove from the top of the
 
-were going to be times that he had to
+element there's no dealing with the
 
-spend six seven eight or nine out of
+other elements when you're taking or
 
-those ten dollars just to make ends meet
+removing from a stack so it's highly
 
-for him though saving money wasn't a way
+efficient for adding or removing plus
 
-to build wealth it was actually a way to
+it's very widely used in depth for
 
-ensure that he never had to sleep hungry
+search but more on that later the next
 
-again so this simple principle of trying
+data structure we're going to talk about
 
-to save as much money as you can and
+is the Q and unlike a stack that was
 
-live off of little as possible really
+last and first out this is a first and
 
-stuck with me and it's one of the main
+first out which means the first element
 
-factors that I think many other Chinese
+added is the first element to be removed
 
-people adopt as well now this is a good
+think of it when you're standing in line
 
-rule if you're trying to build wealth
+at the store the person at the front
 
-But please understand that this type of
+gets to the checkout first and then they
 
-rule will create what's called a
+get dealt with first any new people that
 
-scarcity mindset about money and so you
+want to join the line has to join in in
 
-kind of have to acknowledge that
+the back and must wait their turn till
 
-psychologically that as you earn more
+they come to the front each element in a
 
-money you can kind of switch your
+queue is stored in an ordered manner but
 
-mindset into more of an abundance
+unlike an array which is also ordered
 
-mindset later on the third factor that
+these elements can be added only in the
 
-the Chinese employ to save a lot of
+back and removed in the front for the
 
-money is that they really focus on their
+Big O time complexity of a que just like
 
-needs versus their wants so another Wise
+a stack you can't access element by
 
-lesson from them is that if you need
+their index but for some reason if you
 
-something and you have to actually spend
+have to go through the whole queue to
 
-money on something you need then go
+find a certain element that would be an
 
-ahead and spend money especially if it
+O of n operation to access or search if
 
-pertains to your health so if you're
+you're not just trying to access the
 
-debating between a flimsy desk chair or
+first element there in terms of
 
-an ergonomic chair that might be able to
+insertion or deltion those are o of one
 
-make you more comfortable and stay
+operations because you add to the back
 
-healthier throughout the day you might
+remove from the front and it's just
 
-want to opt for that ergonomic chair I
+continuous think of a stack but in
 
-would classify the ergonomic chair as a
+slight reverse order plus qes are highly
 
-need within reason of course you don't
+used in breath th search and Spotify
 
-want to take this logic to the most
+music the next data structure we're
 
-extreme for example everyone needs
+going to talk about is the Heap or
 
-clothes but that doesn't mean you need
+priority CU think of a heap like a
 
-to go buy Gucci clothes just because
+pyramid of stacked boxes where the
 
-they are better because it's a need so
+smallest Box is always at the very top
 
-here the idea is to be reasonable with
+you don't randomly grab a box from the
 
-your spending and make smart choices and
+middle you always take from the top but
 
-save where you can now when it comes to
+specifically for heaps they actually
 
-wants you can still buy something that
+always need a box to be at the top like
 
-you want but make sure that you're going
+if any boxes are removed within the
 
-to get really good value out of that so
+pyramid they need to readjust so there's
 
-what do I mean by that let's say you buy
+a box still at the top so it can
 
-a 350 dollar fancy wallet like let's say
+maintain that structure also there are
 
-you just really wanted this well you
+two types of heaps that you need to know
 
-want to make sure that you can use that
+first is a Min Heap where every parent
 
-wallet for a very long time so that it
+is smaller than its children and the top
 
-amortizes the cost of your use could you
+element is the smallest while in a Max
 
-use that wallet for five years then that
+Heap every parent is larger than its
 
-means you would take that 350 dollars
+children and the top element is the
 
-and spread it out over five years of
+largest for efficiency accessing an
 
-usage that comes out to less than 20
+element by its index is not a general
 
-cents a day spending money is inevitable
+operation but if needed it would be o of
 
-everybody will have to spend money at
+one to access the top element which we
 
-some point but the lesson here is to be
+call the root and O of n for any
 
-reasonable and Frugal with most of your
+arbitrary elements within the Heap
 
-decisions the last Factor here is that
+inserting an element is a o of login
 
-if you're trying to save money very
+procedure because first it's added into
 
-quickly the Chinese would advise you to
+the Heap and then because of the Heap
 
-stay at home and eat at home now we have
+property of the parent child ration ship
 
-food at home food at home
+being bigger or smaller it bubbles up to
 
-I think this one is pretty Universal to
+its right position similarly removing is
 
-most cultures we know that by eating out
+also o of login because it removes the
 
-we're spending a lot more money on food
+elements and then bubbles down to
 
-than we need to and in my household I
+restore the Heap property and since
 
-remember growing up and we would maybe
+heaps are actually balanced binary trees
 
-go out to eat once every other week
+which more on that later both insertion
 
-usually having people over to have a
+and deletion operations are extremely
 
-group dinner was more of a common place
+efficient compared to linear data
 
-and so that was our way of socializing
+structures like arrays or link lists
 
-as a family growing up and the eating
+which we talked about the next data
 
-out was just mostly saved for special
+structure we're going to talk about is
 
-occasions I hope some of these tips will
+the hashmap and make sure you know this
 
-inspire you to save if they did please
+one think of a hashmap like a mail room
 
-let me know in the comments and as the
+in an office where every empy employee
 
-Chinese would say during New Year's gong
+has a dedicated mailbox instead of
 
-XI fatsai which means I hope you get
+sorting through all the mail one by one
 
-rich make sure to check out my
+by one you just look oh John his mailbox
 
-newsletter hump days and I'll see you
+is number four Sally her mailbox is
 
-guys in the next video peace
+number five you know exactly where to
+
+put it and John and Sally know exactly
+
+where to access it a hashmap stores data
+
+using key value pairs where each key is
+
+run through a hash function that
+
+determines where the value should be
+
+stored an example of a hash function
+
+could be the length of a string so
+
+John's name for example is four
+
+characters long so he's in position four
+
+Sally is in position five her name is
+
+five characters long this makes lookups
+
+on hash Maps extremely efficient time
+
+complexity wise being 0 of one however
+
+if too many items hash to the same
+
+mailbox which we call a hash Collision
+
+for example if a new employee Andy joins
+
+well his name is also four letters we
+
+can't just put him in position number
+
+four because that's where JN is so we
+
+need to have a hash Collision resolution
+
+which could be a linkless chaining from
+
+the hashmap position or it could be
+
+linear probing where you find the next
+
+available position either way this is
+
+the only real downside to hashmaps
+
+otherwise they are super super efficient
+
+as a data structure so overall accessing
+
+an element by its key in a hashmap is an
+
+O of one operation but it could be o of
+
+n worst case if everything is put onto
+
+that link list and you have to do a lot
+
+of searching inserting an element is an
+
+O of one operation but worst case
+
+scenario that could end up being o ofen
+
+deleting an element is also an O of one
+
+operation because if you have the right
+
+key you can just go to the value but if
+
+there is a long length list that you
+
+have to deal with to find the actual
+
+element that you're dealing with that
+
+could end up being an O of end operation
+
+by the way if you use Python you
+
+probably call hashmaps dictionaries but
+
+they're pretty much the same thing the
+
+next data structure we're going to talk
+
+about is the binary search tree so it's
+
+a tree it looks similar to a family tree
+
+but the key difference is each node
+
+follows a specific ordering rule the
+
+left child has to contain values smaller
+
+than the parent and the right child has
+
+to contain values greater than the
+
+parent this makes searching insertion
+
+and deletion extremely efficient in
+
+terms of the Big O accessing inserting
+
+and deleting into a binary search tree
+
+is an O of login procedure because of
+
+the rules of the left parent and right
+
+needing to be less than one another
+
+while we're dealing with the elements
+
+every time we look to access an element
+
+insert an element or delete an element
+
+you can literally eliminate half the
+
+tree as we're going through it so it's
+
+like going through the dictionary trying
+
+to find that word because you're just
+
+splitting up your search Space by half
+
+every layer that you're going but worst
+
+case if your binary search tree is
+
+unbalanced for some reason and it looks
+
+something something similar to a link
+
+list each of those operations access
+
+insertion and deletion becomes o of n
+
+because you might have to go through
+
+each element there's no elimination of
+
+search space the next data structure
+
+we're going to talk about is the set and
+
+I want you to think of this like
+
+thanos's Infinity Gauntlet it can hold
+
+powerful stones but each stone is unique
+
+if Thanos tries to add the same Stone
+
+twice it simply won't work because the
+
+gauntlet can only allow one of each kind
+
+also the order in which he collects the
+
+stones doesn't matter matter at all as
+
+long as like he has all the stones in
+
+whatever order they're all unique it'll
+
+be good sets are very useful if you're
+
+searching through trees or you're
+
+searching through graphs and you want to
+
+keep track of if you visited a certain
+
+node or not and overall the definition
+
+of a set is an unordered collection of
+
+unique elements typically implemented
+
+using a hash table similarly the
+
+efficiency of a hash map with the hash
+
+function this makes checking for the
+
+existence of an element extremely fast
+
+which means 0 of one on average time
+
+however similar to all the issues that
+
+we had with the hash function and the
+
+hash Maps causing potential collisions
+
+that can take it all the way up to O of
+
+n unlike a razor link list sets don't
+
+store duplicates and they don't maintain
+
+a specific order and in fact they're
+
+actually used for a lot of coding
+
+interview questions such as removing
+
+duplicates from a link list removing
+
+duplicates from a data set or checking
+
+for a certain membership or performing
+
+mathematical set operations so make sure
+
+you know your sets because it's never
+
+going to be the main data structure but
+
+it's always going to be something to
+
+have in handy just like thanos's
+
+Gauntlet in terms of the Big O time
+
+complexity in inserting and deleting are
+
+going to be o of one operations because
+
+of the whole hash function but if
+
+there's so many cash collisions once
+
+again it's going to be o ofn worst case
+
+just like it was for the hashmap and
+
+that's if the case is it's run by hash
+
+tables in the background there are
+
+various other ways to create sets I just
+
+gave you an example of a hash set and if
+
+you're interested in leveling up your
+
+career applying your data structures
+
+knowledge two actual leite code problems
+
+that show up in top Tech interviews for
+
+companies like Amazon or Google you
+
+might want to check out my newsletter
+
+down below where I'm going to send you
+
+guys links for popular leak code
+
+Problems by each company for different
+
+data structures so you guys can practice
+
+and really get ahead of the game well
+
+that's about all I have in this video I
+
+really hope that you guys enjoyed it and
+
+if you did make sure to hit the like
+
+button subscribe if you haven't already
+
+and now if you're interested in landing
+
+a software engineering internship for
+
+summer of 2025 check out this video
+
+right here

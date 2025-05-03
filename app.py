@@ -123,32 +123,10 @@ def process():
         return jsonify({"error": "Internal Server Error"}), 500
     
 
-
-# @app.route("/answer", methods=["POST"])
-# def answer():
-#     try:
-#         data = request.get_json()
-#         question = data.get("question")
-#         context = data.get("context")
-
-#         if not question or not context:
-#             return jsonify({"error": "Missing question or context"}), 400
-
-#         answer = generate_answer_with_window(question, context)
-#         return jsonify({"answer": answer}), 200
-
-#     except Exception as e:
-#         print(f"Error in /answer route: {e}")
-#         return jsonify({"error": "Internal Server Error"}), 500
-
-# FOR TESTING PURPOSES ONLY 
-# ---------------------------
-
-
-
-@app.route("/answer", methods=["GET"])
+@app.route("/answer", methods=["POST"])
 def answer():
-    question = request.args.get("question")
+    data = request.get_json()
+    question = data.get("question")
 
     # Find the latest preprocessed file
     preprocessed_files = [f for f in os.listdir(preprocessed_text_folder) if f.startswith("preprocessed_")]
@@ -168,7 +146,7 @@ def answer():
         return jsonify({"error": "Missing question or context could not be loaded"}), 400
 
     # 1. Find relevant context using semantic similarity
-    relevant_context = find_relevant_context(question, full_context, similarity_model, top_k=3) # Get top 3 chunks
+    relevant_context = find_relevant_context(question, full_context, similarity_model, top_k=3)  # Get top 3 chunks
 
     if not relevant_context:
          return jsonify({"answer": "Could not find relevant context for the question."}), 200
@@ -179,19 +157,12 @@ def answer():
     return jsonify({
         "answer": final_answer,
         "relevant_context_used": relevant_context
-        }), 200
-
-# TEST: http://127.0.0.1:5000/answer?question=Who%20developed%20the%20theory%20of%20relativity%3F&context=The%20theory%20of%20relativity%2C%20developed%20by%20Albert%20Einstein%20in%20the%20early%2020th%20century%2C%20revolutionized%20our%20understanding%20of%20space%2C%20time%2C%20and%20gravity.%20It%20consists%20of%20two%20parts%3A%20special%20relativity%20and%20general%20relativity.%20Special%20relativity%20deals%20with%20the%20physics%20of%20objects%20moving%20at%20constant%20speeds%2C%20particularly%20those%20approaching%20the%20speed%20of%20light.%20General%20relativity%20extends%20this%20to%20include%20gravity%20and%20acceleration%2C%20proposing%20that%20massive%20objects%20cause%20a%20curvature%20in%20spacetime.%20These%20ideas%20have%20been%20confirmed%20by%20numerous%20experiments%20and%20have%20led%20to%20technologies%20like%20GPS%2C%20which%20rely%20on%20relativistic%20corrections%20to%20maintain%20accuracy.
-
-
-# -------------------------------
+    }), 200
 
 
 # -------------------------------
 #       HELPER FUNCTIONS
 # -------------------------------
-
-
 
 def download_youtube_audio(youtube_link):
     ydl_opts = {
@@ -208,7 +179,6 @@ def download_youtube_audio(youtube_link):
         info_dict = ydl.extract_info(youtube_link, download=True)
         audio_filename = os.path.join(download_folder, f"audioSource.{info_dict['ext']}")
         return info_dict, audio_filename
-
 
 
 def extract_plaintext_subtitles(json_text):
@@ -304,15 +274,14 @@ def clear_download_folder():
 
 
 
-def generate_answer_with_window(question, context, max_chunk_words=150, max_answer_tokens=64):
+def generate_answer_with_window(question, context, max_chunk_words=150, max_answer_tokens=128):
     """
-    Generates an answer to a question based on the provided context.
-    Splits the context into potentially overlapping chunks and aggregates answers.
+    Generates a more natural and informative answer to a question based on the context.
+    The answer should be coherent and concise, resembling GPT-style responses.
     """
-    # Break context into potentially overlapping word chunks
+    # Split context into chunks with overlap to ensure continuity
     words = context.split()
-    # Use a step size smaller than chunk size for overlap, helps context flow
-    step = max(1, max_chunk_words // 2) # 50% overlap
+    step = max(1, max_chunk_words // 2)  # 50% overlap
     chunks = [
         " ".join(words[i:i + max_chunk_words])
         for i in range(0, len(words), step) if len(words[i:i + max_chunk_words]) > 10
@@ -321,50 +290,44 @@ def generate_answer_with_window(question, context, max_chunk_words=150, max_answ
     if not chunks:
         return "Context was empty or too short to process."
 
-    # Generate answers per chunk
+    # Generate answers for each chunk
     answers = []
-    print(f"Generating QA answers from {len(chunks)} chunk(s)...")
+    print(f"Generating answers for {len(chunks)} chunk(s)...")
     for i, chunk in enumerate(chunks):
-        # Format prompt for FLAN-T5
-        prompt = f"question: {question} context: {chunk}"
+        # Update prompt to guide the model more naturally
+        prompt = f"Provide a clear and concise answer to this question: {question}. Based on this context: {chunk}."
         inputs = gen_tokenizer(prompt, return_tensors="pt", truncation=True, max_length=512).to(gen_model.device)
 
         try:
             outputs = gen_model.generate(
                 inputs["input_ids"],
                 max_new_tokens=max_answer_tokens,
-                num_beams=4, # Use beam search for potentially better results
+                num_beams=4,  # Beam search to enhance coherence
                 early_stopping=True
             )
-            # Decode the generated tokens
-            answer = gen_tokenizer.decode(outputs[0], skip_special_tokens=True)
+            answer = gen_tokenizer.decode(outputs[0], skip_special_tokens=True).strip()
 
-            # Basic filtering of non-answers or irrelevant responses
-            answer_lower = answer.lower().strip()
-            if answer and answer.strip() and answer_lower not in [
-                "i don't know",
-                "i don't know.",
-                "context does not provide information",
-                "not mentioned in the context",
-                "the context does not mention",
-                "the context does not provide",
-                "information not available in context",
-                "no information found"
-                # Add more variations like this
-            ] and len(answer_lower) > 2:
-                 answers.append(answer)
-            print(f"Answer for chunk {i+1}/{len(chunks)}: {answer}")
+            # Allow natural answers and ignore redundant phrases
+            if len(answer) > 2 and answer.lower() not in [
+                "i don't know", "not mentioned", "no information found", "context does not provide information"
+            ]:
+                answers.append(answer)
+            print(f"Answer for chunk {i+1}: {answer}")
         except Exception as e:
             print(f"Error generating answer for chunk {i+1}: {e}")
             continue
 
     if not answers:
-        return "Could not find a suitable answer in the provided context."
+        return "I couldn't find a clear answer in the context provided."
 
-    # This helps aggregate results if multiple chunks provide the same answer
-    most_common_answer = Counter(answers).most_common(1)[0][0]
-    return most_common_answer
+    # Choose the most relevant answer by considering all the generated answers
+    best_answer = max(answers, key=len)  # Prefer the longest (most detailed) answer
 
+    # Ensure the answer is concise, but not overly restrictive
+    if len(best_answer) > 100:
+        best_answer = best_answer[:100] + "..."  # Truncate at 100 characters with ellipsis
+
+    return best_answer
 
 
 def summarize_text(text_to_summarize, max_length=250, min_length=50):

@@ -1,74 +1,151 @@
 {% extends "base.html" %}
 
 {% block body %}
-  <h1 class="page-title" style="color: white;">Please insert the YouTube video here</h1>
+<style>
+  :root {
+    --bg-color: #1e1e1e;
+    --text-color: white;
+    --highlight-color: #f0f0f0;
+    --accent-color: #333;
+    --button-bg: white;
+    --button-text: black;
+  }
 
-  <div class="form-group" style="margin-bottom: 20px;">
+  .container {
+    color: var(--text-color);
+    padding: 30px;
+    max-width: 800px;
+    margin: auto;
+  }
+
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  .form-control {
+    background-color: var(--accent-color);
+    color: var(--text-color);
+    border: 1px solid #777;
+    padding: 10px;
+    width: 100%;
+    font-size: 16px;
+    border-radius: 4px;
+  }
+
+  .form-control::placeholder {
+    color: #bbb;
+  }
+
+  #submitBtn {
+    margin-top: 10px;
+    padding: 10px 20px;
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    border: 2px solid black;
+    font-size: 14px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  #responseText {
+    display: none;
+    margin-top: 25px;
+    padding: 15px;
+    background-color: #222;
+    color: var(--highlight-color);
+    border-left: 4px solid #555;
+    border-radius: 5px;
+  }
+
+  h1, h2 {
+    color: var(--text-color);
+    margin-bottom: 20px;
+  }
+</style>
+
+<div class="container">
+  <h1>Please insert the YouTube video here</h1>
+
+  <div class="form-group">
     <input type="url" class="form-control" id="youtubeLink" placeholder="Paste YouTube link here..." />
   </div>
 
-  <!-- Plain text response without any container, with margin spacing -->
-  <div id="responseText" style="display: none; margin-bottom: 20px;"></div>
+  <h2>What can I help you with?</h2>
 
-  <!-- Adding margin to the prompt to create spacing -->
-  <h2 style="margin-top: 30px; color: white;">What can I help you with?</h2>
-
-  <div class="form-group" style="margin-bottom: 20px;">
+  <div class="form-group">
     <textarea class="form-control" id="userQuery" rows="4" placeholder="Enter your query here..."></textarea>
   </div>
 
-  <button type="submit" id="submitBtn" style="margin-top: 10px; padding: 8px 15px; background-color: white; color: black; border: 2px solid black; font-size: 14px;">Submit</button>
+  <button type="submit" id="submitBtn">Submit</button>
 
-  <script>
-    // Add event listener to change text color to white on input
-    document.getElementById("userQuery").addEventListener("focus", function() {
-      this.style.color = "white";
+  <div id="responseText"></div>
+</div>
+
+<script>
+  const responseText = document.getElementById("responseText");
+
+  document.getElementById("userQuery").addEventListener("focus", function () {
+    this.style.backgroundColor = "#444";
+  });
+
+  document.getElementById("userQuery").addEventListener("blur", function () {
+    if (this.value === "") {
       this.style.backgroundColor = "#333";
-    });
+    }
+  });
 
-    // Reset the color when user stops typing
-    document.getElementById("userQuery").addEventListener("blur", function() {
-      if (this.value === "") {
-        this.style.color = "gray";
-      }
-    });
+  document.getElementById("submitBtn").addEventListener("click", async function () {
+    const youtubeLink = document.getElementById("youtubeLink").value;
+    const userQuery = document.getElementById("userQuery").value;
 
-    // Get the submit button and add a click event listener
-    document.getElementById("submitBtn").addEventListener("click", function() {
-      const youtubeLink = document.getElementById("youtubeLink").value;
-      const userQuery = document.getElementById("userQuery").value;
-      
-      // Check if both fields are filled
-      if (!youtubeLink || !userQuery) {
-          alert("Please provide both the YouTube link and your query.");
-          return;
-      }
+    if (!youtubeLink || !userQuery) {
+      alert("Please provide both the YouTube link and your query.");
+      return;
+    }
 
-      // Hide the prompt and show the response text
-      document.querySelector("h2").style.display = "none";
+    document.querySelector("h2").style.display = "none";
+    responseText.style.display = "block";
+    responseText.innerText = "Transcribing and processing video... Please wait.";
 
-      // Hide the input fields and show the response text
-      const responseText = document.getElementById("responseText");
-      responseText.style.display = "block";
-      responseText.innerText = "Processing... Please wait.";
-
-      // Send the data to the server using fetch API using POST method
-      fetch("/process", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ youtubeLink, userQuery })
-      })
-      .then(response => response.json())
-      .then(data => {
-          if (data.error) {
-              responseText.innerText = "Error: " + data.error;
-          } else {
-              responseText.innerText = data.message + "\nQuery: " + data.query + "\nTranscritption: " + data.transcription;
-          }
-      })
-      .catch(error => {
-          responseText.innerText = "Failed to connect to the server.";
+    try {
+      // Step 1: Call /process
+      const processResponse = await fetch("/process", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ youtubeLink, userQuery })
       });
-    });
-  </script>
+
+      const processData = await processResponse.json();
+
+      if (processData.error) {
+        responseText.innerHTML = `<strong>Error:</strong> ${processData.error}`;
+        return;
+      }
+
+      responseText.innerHTML = `
+        <strong>Transcription Summary:</strong><br>${processData.summary}<br><br>
+        <strong>Query:</strong><br>${processData.query}
+      `;
+
+      // Step 2: Call /answer
+      const answerResponse = await fetch("/answer", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question: processData.query })
+      });
+
+      const answerData = await answerResponse.json();
+
+      if (answerData.error) {
+        responseText.innerHTML += `<br><br><strong>Error generating answer:</strong><br>${answerData.error}`;
+      } else {
+        responseText.innerHTML += `<br><br><strong>Answer:</strong><br>${answerData.answer}`;
+      }
+
+    } catch (err) {
+      responseText.innerText = "An unexpected error occurred. Please try again.";
+      console.error("Error:", err);
+    }
+  });
+</script>
 {% endblock %}
