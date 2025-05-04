@@ -276,11 +276,11 @@ def clear_download_folder():
 
 def generate_answer_with_window(question, context, max_chunk_words=150, max_answer_tokens=128):
     """
-    Generates a natural, detailed answer to a question based on overlapping context chunks.
-    The final answer is limited to one paragraph, up to 400 characters.
+    Synthesizes key info from all context chunks and generates a single, concise answer.
+    Final output is a paragraph up to 400 characters.
     """
     words = context.split()
-    step = max(1, max_chunk_words // 2)  # 50% overlap
+    step = max(1, max_chunk_words // 2)
     chunks = [
         " ".join(words[i:i + max_chunk_words])
         for i in range(0, len(words), step) if len(words[i:i + max_chunk_words]) > 10
@@ -289,52 +289,69 @@ def generate_answer_with_window(question, context, max_chunk_words=150, max_answ
     if not chunks:
         return "Context was empty or too short to process."
 
-    answers = []
-    print(f"Generating answers for {len(chunks)} chunk(s)...")
+    # Step 1: Extract insights from each chunk
+    summaries = []
+    print(f"Summarizing {len(chunks)} chunk(s)...")
     for i, chunk in enumerate(chunks):
-        prompt = (
-            f"Answer the following question using only the information in the context. "
-            f"Write a clear, detailed paragraph no longer than 400 characters.\n\n"
+        summary_prompt = (
+            f"Summarize the most important information from this context relevant to the question.\n\n"
             f"Question: {question}\n\n"
             f"Context: {chunk}"
         )
 
-        inputs = gen_tokenizer(prompt, return_tensors="pt", truncation=True, max_length=512).to(gen_model.device)
+        inputs = gen_tokenizer(summary_prompt, return_tensors="pt", truncation=True, max_length=512).to(gen_model.device)
 
         try:
             outputs = gen_model.generate(
                 inputs["input_ids"],
-                max_new_tokens=max_answer_tokens,
+                max_new_tokens=100,
                 num_beams=4,
                 early_stopping=True
             )
-            answer = gen_tokenizer.decode(outputs[0], skip_special_tokens=True).strip()
-            if len(answer) > 2 and answer.lower() not in [
-                "i don't know", "not mentioned", "no information found", "context does not provide information"
-            ]:
-                answers.append(answer)
-            print(f"Answer for chunk {i+1}: {answer}")
+            summary = gen_tokenizer.decode(outputs[0], skip_special_tokens=True).strip()
+            if len(summary) > 20:
+                summaries.append(summary)
+            print(f"Summary {i+1}: {summary}")
         except Exception as e:
-            print(f"Error generating answer for chunk {i+1}: {e}")
+            print(f"Error summarizing chunk {i+1}: {e}")
             continue
 
-    if not answers:
-        return "I couldn't find a clear answer in the context provided."
+    if not summaries:
+        return "I couldn't extract useful information from the context."
 
-    # Choose most detailed answer (favoring length)
-    best_answer = max(answers, key=len)
+    # Step 2: Combine summaries into one synthesized context
+    synthesized_context = " ".join(summaries)
 
-    # Post-process to limit to ~400 characters, preserving sentence integrity
-    if len(best_answer) > 400:
-        # Truncate at the last full sentence within 400 characters
-        truncated = best_answer[:400]
-        last_period = truncated.rfind('.')
-        if last_period != -1:
-            best_answer = truncated[:last_period + 1]
-        else:
-            best_answer = truncated.strip() + "..."
+    # Step 3: Final answer generation from synthesized context
+    final_prompt = (
+        f"Answer the following question using only the synthesized information below. "
+        f"Write a detailed and clear paragraph, max 400 characters.\n\n"
+        f"Question: {question}\n\n"
+        f"Synthesized Context: {synthesized_context}"
+    )
 
-    return best_answer
+    inputs = gen_tokenizer(final_prompt, return_tensors="pt", truncation=True, max_length=512).to(gen_model.device)
+
+    try:
+        outputs = gen_model.generate(
+            inputs["input_ids"],
+            max_new_tokens=max_answer_tokens,
+            num_beams=4,
+            early_stopping=True
+        )
+        answer = gen_tokenizer.decode(outputs[0], skip_special_tokens=True).strip()
+
+        if len(answer) > 400:
+            truncated = answer[:400]
+            last_period = truncated.rfind('.')
+            if last_period != -1 and last_period > 200:
+                answer = truncated[:last_period + 1]
+            else:
+                answer = truncated.strip() + "..."
+
+        return answer
+    except Exception as e:
+        return f"Error generating final answer: {e}"
 
 
 
