@@ -1,667 +1,605 @@
-in this video I'm going to reveal the
+hey and welcome to another data
 
-Chinese secret to saving money now I've
+structures lesson and today we are going
 
-gotten a lot of these money saving tips
+to be going over
 
-from my dad who's your typical good with
+hash maps so let's get started
 
-money Chinese person and I want to share
+all right so the first thing you want to
 
-with you those today people sometimes
+know is what are we talking about when
 
-will ask me if I'm half asian but I'm
+we
 
-actually 100 Chinese and my mom is from
+talk about hash maps so first off what
 
-Beijing my dad is from Shanghai and I've
+is a map
 
-done many trips to China including two
+well map is just an abstract data type
 
-six-month stretches both in Hong Kong
+which basically means it's just an
 
-and in Beijing and many trips in between
+interface
 
-so sit back nihaw women's
+that allows for multiple implementations
 
-the most stunning fact about the Chinese
+okay and hashmap is one of those
 
-is that in China the gross savings rate
+implementations
 
-there is 45.9 percent as of December
+of a map now a map by itself
 
-2021 that means on every hundred dollars
+just uses key value pairs to store data
 
-that they bring in they're going to be
+in an associative array okay so in the
 
-saving roughly 46 dollars of that
+back
 
-contrast that to the United States where
+um in the background of it it's just an
 
-we have a heavy focus on consumption in
+array all right
 
-this country our savings rate is
+and each of those indexes in the array
 
-typically between 3.5 and 5 according to
+or what we call a bucket
 
-the data so what's the reason for this
+and a bucket can hold a collection of
 
-big disparity I mean that's almost a
+key value pairs each index is a
 
-factor of 10 that we're talking about
+collection of key value pairs
 
-here so why are the Chinese so good at
+okay so then what do what does the hash
 
-saving money first it's definitely
+mean
 
-cultural us As Americans we're always
+in hash map well hash is
 
-being hit with sales disc accounts
+the hash in hashmap stands for hashing
 
-financing options and the like 80 off
+and that's just a way to map
 
-clothes come on in and I'll give you a
+keys to the indexes in the map
 
-free quote and we're always kind of
+using what's called a hashing function
 
-pressured to keep up with our neighbors
+which we'll get into
 
-is this car fifteen thousand dollars
+okay all right so hashing
 
-yeah it is now a lot of this originated
+uh now in a map we so
 
-After the post-world War II era it was
+because it's an array in the background
 
-not long after the Great Depression and
+that means it's a finite size right
 
-it was deemed patriotic if you were
+so it goes from zero to n minus one
 
-actually to consume in America at that
+where n is the size of the array so if
 
-time and so they were trying to spur the
+we have an array of four
 
-economy on and I encourage you all to go
+then the indexes would be zero one two
 
-shopping more in China it's very
+three okay
 
-different they have a heavy emphasis on
+and one thing to note about hashmap is
 
-saving money because of what money means
+the keys don't have to be integer values
 
-to them as well as the demographics of
+all right there are um the hash function
 
-their country you'll also find a heavy
+takes care of that if it's not an
 
-aversion to financing things in China
+integer and converts it to
 
-oftentimes Chinese people want to buy
+an integer okay so just keep that in
 
-things full in cash instead of trying to
+mind it doesn't have to be an integer
 
-finance it and take on debt now if
+one other important thing when talking
 
-you're just looking for the Chinese
+about hashmaps is
 
-secret to saving money I'm Gonna Leave a
+collisions all right so we want to
 
-timestamp down below so that you can
+minimize collisions
 
-just skip to it if you want however
+so what is a collision if we have two
 
-right now I'm going to cover the why as
+different keys
 
-to why Chinese people save money because
+that go through the hash function which
 
-I think it's really interesting and if
+we'll talk about
 
-you if you understand intrinsically why
+and returns an integer will that integer
 
-Chinese people want to save money it can
+becomes the index
 
-help you save money as well so the first
+in the associative array well if two
 
-reason reason why Chinese people like to
+different keys come out with the same
 
-save money is the meaning of money and
+index
 
-what it means to them so as kids you're
+that means we're trying to put them into
 
-taught from a very early age that saving
+the same bucket in the array that's
 
-money is Honorable kids will often get
+called a collision
 
-money in these red envelopes for New
+okay and we'll get into that all right
 
-Year's and birthdays and they are often
+so there are two
 
-encouraged by their parents to save it
+important functions when we're talking
 
-this money is referred to as lucky money
+about um
 
-now money is so important to the Chinese
+about the hash function it are two
 
-that they even have a phrase during the
+components when we're talking about hash
 
-holidays and new years that they say
+function the first one is the hash
 
-instead of happy New Year they say
+code and the second one is the
 
-something else let's listen to Ronnie
+compression function
 
-Chang the comedian explain it better
+all right so let's look at an example
 
-than I can even during Chinese New Year
+now
 
-the biggest holiday for Chinese people
+so say we have um a an array of size six
 
-Chinese New Year when we see each other
+so indexes zero through five so this is
 
-during Chinese New Year the way we greet
+our hash map
 
-each other
+okay this is the starting array size for
 
-is we say
+our hashmap
 
-in Cantonese I'm sure you've heard that
+now let's say we want to insert so well
 
-at least perfectly right
+the correct
 
-means hope you get rich
+method is put that's typically how
 
-[Applause]
+specifically the function call is called
 
-that's not
+put
 
-happy
+so you can put a key value pair where
 
-that's pretty funny because it's also
+the key is 5 and the value
 
-true you can also see the importance of
+value is a so what hash map does it puts
 
-money in the way that people in Chinese
+it into this hash function
 
-Society treat other people with a lot of
+which is composed of two components like
 
-money people with a lot of money in
+we just talked about
 
-Chinese culture are deemed successful in
+so the first one is the hash code so
 
-many people's eyes and so it's often
+hash code takes in one parameter and
 
-viewed as a good thing to have a lot of
+that's the key so in this case it's a
 
-money now being successful also has its
+five
 
-other perks in China and that actually
+all right i'm just using integer values
 
-brings me to my next point which is
+but again it doesn't have to be an
 
-demographics up until 2016 China
+integer value
 
-actually had a one child policy that was
+and so it takes in the key
 
-implemented in the late 70s and early
+whatever that key is it turns it into an
 
-80s to kind of stem overpopulation and
+integer
 
-that means each family could have one
+and now that stores say the variable i
 
-child so now if you had more than one
+is equal to some integer that that hash
 
-child you would just be slapped with a
+code produced
 
-fine and in addition if you didn't pay
+then
 
-that fine your household would not be
+then what happens is that integer
 
-able to register your second child's
+doesn't have to be
 
-name in the household system so your
+within the range of the array size yet
 
-second child would not be eligible for
+it could be negative
 
-health care services and other services
+or it could be bigger than the array
 
-like education so naturally this one
+size so right here the size is six
 
-child policy created a sharp decline in
+uh if the number if the index that the
 
-newborns as you can see by this graph
+integer that just produces seven
 
-but also in sex selective abortions in
+that's bigger than the array size so we
 
-China it's usually much more important
+so it won't be able to be inserted into
 
-to have a boy than a girl because the
+one of those indexes because it's
 
-boy usually inherits the family name as
+larger so you get like an out of bounds
 
-well as the property so what you had was
+exception okay
 
-a lot of people kind of using
+um so that's where the compression
 
-contraception in a way that they would
+function comes in
 
-avoid female bursts and try to optimize
+we take the output integer from the hash
 
-for mail bursts and with that
+code so the integer the variable i
 
-contraception actually it skewed the
+we insert that into the compression
 
-population having more males than
+function
 
-females over time so at its worst it was
+and all that does is it up it now
 
-122 males for every 100 females that
+converts
 
-were born now in general terms if you
+makes sure that that integer value is in
 
-have more men than women than you have a
+the range
 
-supply and demand issue right so there's
+of the array so here would be 0 and 5
 
-more men chasing the same amount of
+okay so it's going to be in the range of
 
-women so basically to stand out as a man
+0
 
-in China you have to be viewed as
+and 5. all right um
 
-successful AKA you probably have a lot
+so let's take uh so now let's look at
 
-of money the other thing with the one
+what can happen
 
-child policy was that since families
+if uh we have a collision okay which is
 
-were only having one child they weren't
+whenever we try to have the same
 
-having multiple kids in the majority of
+or two different keys into the same
 
-cases that means that the parents could
+index all right
 
-save more money because they didn't have
+so here we already know that we have
 
-multiple kids to feed so you kind of had
+that we tried to insert
 
-a double whammy with the one child
+um the key value pair 5a
 
-policy you had parents not having to
+and we tried to put it through the hash
 
-spend as much money and then the males
+function and it came out
 
-trying to save as much money to become
+with the value of one as the integer so
 
-desirable another reason for saving in
+that one
 
-China is that there's no 401K there's no
+means that we inserted that into the
 
-Ira there's no retirement accounts that
+corresponding index in the array
 
-Chinese people can contribute to rather
+which is index one okay so that's where
 
-they do have what's called a pension
+it's stored right here
 
-system but still many people in China
+now let's say we have another key value
 
-are wary that the pension system will
+pair we want to insert
 
-still be around when they retire and so
+in this case um it's to
 
-they also worry about the cost of
+the key value pair to b and it just so
 
-healthcare education and their own
+happens this is
 
-pensions so these are some of the main
+i don't know if this is correct or not
 
-intrinsic reasons as to why Chinese
+this is just an example all right
 
-people like to save money but let's
+to show you what how to deal with the
 
-actually talk about the money secret of
+collision
 
-this video the main secret as to why
+so let's say we insert the keyboard pair
 
-Chinese people are brilliant at saving
+to b
 
-money it's not anything crazy it's just
+and the output after going through the
 
-that they have every dollar accounted
+hash code and the compression function
 
-for in my particular case my dad would
+is one as the integer okay so that means
 
-always know where his money was going at
+that we now need to put
 
-all times and there is a special
+this key value pair into the same index
 
-budgeting system that can help you with
+that's already occupied
 
-this and in America and in the Western
+by 5 the key value pair 5a
 
-countries it's called the zero-based
+this is a collision because something
 
-budgeting system the zero-based
+already exists there and we're trying to
 
-budgeting system is a method in which
+put something else there
 
-you budget where you spend every last
+now there are different ways to handle
 
-cent of your monthly income so that your
+this
 
-amount left at the end of every month is
+because you want to think about worst
 
-equal to zero so that means your income
+case scenarios right if all key value
 
-minus your expenses equals zero at the
+players go into the same bucket and you
 
-end of the month now expenses in this
+have to search for it
 
-case also includes savings Investments
+you know there's another data structure
 
-paying off debt Etc let's pretend you
+behind there's a lot of time like i'll
 
-make four thousand dollars a month a
+talk about one now
 
-zero-based budget might look like the
+like singly linked list all right so the
 
-following you have your rents your
+worst case scenario is you have to
 
-groceries your Necessities all listed
+traverse all the way to the end of the
 
-right here but then you also have a
+singly link list just to retrieve
 
-section for the things that you're
+one value okay so
 
-saving for your emergency fund your IRA
+and then we have all this extra space
 
-your student loan payments new car fund
+that's not even occupied
 
-and then any other savings that you
+so a topic of discussion
 
-might want to do you can see by the time
+that could be its own video is how to
 
-that you get to the end of your
+deal with collisions
 
-budgeting you are left with zero dollars
+now there are there are a couple ways
 
-at the bottom right here this is
+all right so again we have the same key
 
-essentially the zero based budgeting
+value pairs we just used all right
 
-system where all dollars are accounted
+the first one or there's several ways
 
-for you can easily do this budgeting
+but i'm going to talk about two of them
 
-system at home but it also means that
+so the first one
 
-you have to be super honest with your
+is called separate chaining now what
 
-own expenses and sometimes you might
+this means
 
-have to do this for three months to get
+is that like we just said we have a
 
-an average of all your variable expenses
+singly linked list for each
 
-throughout the three months if you've
+bucket okay so now this means that we
 
-watched some of my videos before you
+can have multiple
 
-should know that this budgeting system
+key value pairs for each bucket
 
-doesn't exactly tell you how much you
+and what this there's a couple things
 
-should spend for every single category
+that this allows us to do first off is
 
-rather it kind of helps you understand
+we don't have to worry about the sazi
 
-your expenses as a whole including your
+array
 
-fixed expenses and then you can kind of
+because we never have to increase it
 
-categorize your expenses and allocate
+right we never have to worry about it
 
-your budget from there all right there
+because if if it happened that this was
 
-are four main factors that the Chinese
+filled up
 
-prioritize to help them save a lot of
+and these that weren't didn't allow we
 
-money that I want to tell you about
+didn't allow
 
-before we do that though make sure to
+key value pairs to collide in the same
 
-drop this video a like and if you enjoy
+bucket then you'd have to increase the
 
-economics and business content I want
+array size
 
-you to check out my free newsletter
+so here we don't have to worry about
 
-called hump days that comes out twice a
+that because we have a single
 
-week on Wednesdays and Sundays it's
+list for each bucket in this array we
 
-completely free to sign up and I will
+keep the same size so this will always
 
-link it down below and I hope to see you
+be size of six
 
-guys in the newsletter as well all right
+and anytime there's a collision we just
 
-so the first of the four main factors
+add it on to the end of the singly link
 
-that the Chinese do to help them save
+list
 
-money is that they don't indulge in
+and that's it okay that's all we do this
 
-luxury goods or Goods that are just
+is one of the easier ones to implement
 
-there as status symbols the majority of
+and easier to understand okay
 
-Chinese people want to stay humble and
+so that's another one we're gonna talk
 
-they also want to fly under the radar so
+about is called linear probing
 
-they usually stay away from these luxury
+all right this is when um
 
-products number two when the Chinese
+each bucket only holds a single key
 
-earn money they usually like to live off
+value pair
 
-a very small percentage of their income
+all right so it this doesn't even allow
 
-now my dad grew up with very little
+collisions all right i mean
 
-money as a child in Shanghai there were
+whenever we believe there's going to be
 
-some days that he could not even afford
+a collision it handles it right away and
 
-food and he would go to sleep hungry
+doesn't allow
 
-when he was able to afford food all he
+two key value pairs to occupy the same
 
-could really buy at the time was a plain
+bucket
 
-pastry called the manto and amanto is a
+so how does that work okay so let's take
 
-tasteless kind of white bun that you can
+a look
 
-buy for very cheap because of this tough
+for an example let's say we have index
 
-childhood when my dad started his career
+one two and four filled up
 
-whenever he earned let's say ten dollars
+with values all right and we wanna
 
-he tried to live off of one single
+insert
 
-dollar now in reality was he able to
+um two b okay that's the key value pair
 
-live off of one dollar for every ten
+we wanna insert into the hash map
 
-dollars that he earned not really there
+now what happens here is let's say
 
-were going to be times that he had to
+let's uh oops let me
 
-spend six seven eight or nine out of
+go back one sorry about that uh
 
-those ten dollars just to make ends meet
+let's say we have 2b and we want to
 
-for him though saving money wasn't a way
+insert it
 
-to build wealth it was actually a way to
+into the hashmap and it outputs the
 
-ensure that he never had to sleep hungry
+index
 
-again so this simple principle of trying
+an integer of one which corresponds to
 
-to save as much money as you can and
+the index in the associative array
 
-live off of little as possible really
+okay well that's occupied by the value a
 
-stuck with me and it's one of the main
+so it can't go there all right so what's
 
-factors that I think many other Chinese
+going to do is going to say okay what's
 
-people adopt as well now this is a good
+the next
 
-rule if you're trying to build wealth
+indexed well the next index is two well
 
-But please understand that this type of
+that's also
 
-rule will create what's called a
+occupied okay so move on to the next one
 
-scarcity mindset about money and so you
+what's the next one
 
-kind of have to acknowledge that
+that's index three and that's not
 
-psychologically that as you earn more
+occupied
 
-money you can kind of switch your
+so it just found an empty index and we
 
-mindset into more of an abundance
+can insert
 
-mindset later on the third factor that
+um the value b into this hash map
 
-the Chinese employ to save a lot of
+okay all right
 
-money is that they really focus on their
+so that's that's the basics of how
 
-needs versus their wants so another Wise
+hashmap works okay so again
 
-lesson from them is that if you need
+we whenever you want to insert anything
 
-something and you have to actually spend
+to the hash map
 
-money on something you need then go
+the all this does it goes through the
 
-ahead and spend money especially if it
+hash function which is two components
 
-pertains to your health so if you're
+it is the hash code which converts
 
-debating between a flimsy desk chair or
+whatever
 
-an ergonomic chair that might be able to
+an arbitrary key into an integer value
 
-make you more comfortable and stay
+that could be negative or could be
 
-healthier throughout the day you might
+larger than the initial array
 
-want to opt for that ergonomic chair I
+or the array for the hashmap so then we
 
-would classify the ergonomic chair as a
+have to do the compression function
 
-need within reason of course you don't
+which means we put it in
 
-want to take this logic to the most
+we make sure it's between zero and the
 
-extreme for example everyone needs
+size of the array
 
-clothes but that doesn't mean you need
+and then there are ways to handle
 
-to go buy Gucci clothes just because
+collisions when we have two
 
-they are better because it's a need so
+different key value pairs going into
 
-here the idea is to be reasonable with
+the same bucket in the hash map all
 
-your spending and make smart choices and
+right and
 
-save where you can now when it comes to
+we want to try and eliminate collisions
 
-wants you can still buy something that
+um to make it easier to look to search
 
-you want but make sure that you're going
+or
 
-to get really good value out of that so
+remove or other operations that are
 
-what do I mean by that let's say you buy
+performed on a hashmap
 
-a 350 dollar fancy wallet like let's say
+okay all right if you guys have any
 
-you just really wanted this well you
+questions leave them in the comments
 
-want to make sure that you can use that
+below
 
-wallet for a very long time so that it
+and i will do my best to answer them and
 
-amortizes the cost of your use could you
+help you understand
 
-use that wallet for five years then that
-
-means you would take that 350 dollars
-
-and spread it out over five years of
-
-usage that comes out to less than 20
-
-cents a day spending money is inevitable
-
-everybody will have to spend money at
-
-some point but the lesson here is to be
-
-reasonable and Frugal with most of your
-
-decisions the last Factor here is that
-
-if you're trying to save money very
-
-quickly the Chinese would advise you to
-
-stay at home and eat at home now we have
-
-food at home food at home
-
-I think this one is pretty Universal to
-
-most cultures we know that by eating out
-
-we're spending a lot more money on food
-
-than we need to and in my household I
-
-remember growing up and we would maybe
-
-go out to eat once every other week
-
-usually having people over to have a
-
-group dinner was more of a common place
-
-and so that was our way of socializing
-
-as a family growing up and the eating
-
-out was just mostly saved for special
-
-occasions I hope some of these tips will
-
-inspire you to save if they did please
-
-let me know in the comments and as the
-
-Chinese would say during New Year's gong
-
-XI fatsai which means I hope you get
-
-rich make sure to check out my
-
-newsletter hump days and I'll see you
-
-guys in the next video peace
+even further okay all right thank you
