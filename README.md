@@ -18,7 +18,7 @@ AskTube is an intelligent tool that allows users to ask questions about YouTube 
 
 ---
 
-## Project Overview
+## 📜 Project Overview
 
 AskTube aims to make video content more accessible and digestible. Users provide a YouTube video URL and can then perform two main actions:
 
@@ -31,7 +31,7 @@ The entire application is served via a lightweight Flask web server.
 
 ---
 
-## Features
+## ✨ Features
 
 *   **YouTube Video Processing:** Accepts YouTube video URLs as input.
 *   **Automatic Transcription/Subtitle Extraction:** Uses `yt-dlp` to fetch audio/subtitles and OpenAI's Whisper (`base` model) for accurate speech-to-text when subtitles aren't available.
@@ -43,7 +43,7 @@ The entire application is served via a lightweight Flask web server.
 
 ---
 
-## Technologies Used
+## 💻 Technologies Used
 
 *   **Backend:** Flask
 *   **YouTube Downloader:** `yt-dlp`
@@ -61,7 +61,7 @@ The entire application is served via a lightweight Flask web server.
 
 ---
 
-## Folder Structure
+## 📁 Folder Structure
 
 ```text
 AskTube/
@@ -82,7 +82,7 @@ AskTube/
 
 ---
 
-## Setup and Installation
+## 🛠️ Setup and Installation
 
 Follow these steps to set up and run the AskTube project locally.
 
@@ -141,7 +141,7 @@ pip install -r requirements.txt
 
 ---
 
-## Running the Application
+## 🚀 Running the Application
 
 Once the setup is complete, start the Flask application:
 
@@ -153,7 +153,7 @@ The application will typically start on `http://127.0.0.1:5000/`. Open this URL 
 
 ---
 
-## Presentation and Demo
+## 🎬 Presentation and Demo
 
 You can watch our project presentation and live demo on YouTube:
 
@@ -161,7 +161,7 @@ You can watch our project presentation and live demo on YouTube:
 
 ---
 
-## Project Report
+## 📊 Project Report
 
 For a detailed overview of the project, including architecture, methodology, contributions, and findings, please refer to our full project report:
 
@@ -169,7 +169,7 @@ For a detailed overview of the project, including architecture, methodology, con
 
 ---
 
-## Team Members
+## 👥 Team Members
 
 *   [Luca Donadello](https://github.com/LucaDonadello)
 *   [Muralidharan Krishnakumar](https://github.com/MuraliKrishh0811)
