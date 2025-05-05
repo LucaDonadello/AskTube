@@ -6,15 +6,15 @@ AskTube is an intelligent tool that allows users to ask questions about YouTube 
 
 ## Table of Contents
 
-*   [Project Overview](#project-overview)
-*   [Features](#features)
-*   [Technologies Used](#technologies-used)
-*   [Folder Structure](#folder-structure)
-*   [Setup and Installation](#setup-and-installation)
-*   [Running the Application](#running-the-application)
-*   [Presentation and Demo](#presentation-and-demo)
-*   [Project Report](#project-report)
-*   [Team Members](#team-members)
+*   📜 [Project Overview](#project-overview)
+*   ✨ [Features](#features)
+*   💻 [Technologies Used](#technologies-used)
+*   📁 [Folder Structure](#folder-structure)
+*   🛠️ [Setup and Installation](#setup-and-installation)
+*   🚀 [Running the Application](#running-the-application)
+*   🎬 [Presentation and Demo](#presentation-and-demo)
+*   📊 [Project Report](#project-report)
+*   👥 [Team Members](#team-members)
 
 ---
 
