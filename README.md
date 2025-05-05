@@ -50,7 +50,7 @@ pip install -r requirements.txt
 
 ---
 
-### 4. Configure Script Execution (Windows) – OPTIONAL
+### 4. Configure Script Execution (Windows) (Optional)
 
 If you're on Windows and encounter an issue with script execution, you can temporarily allow it by running the following in PowerShell:
 
