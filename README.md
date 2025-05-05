@@ -22,6 +22,8 @@ AskTube is an intelligent tool that allows users to ask questions about YouTube 
 
 AskTube aims to make video content more accessible and digestible. Users provide a YouTube video URL and can then perform two main actions:
 
+![AskTube Workflow](asktube_workflow.png)
+
 1.  **Process Video:** The application downloads the audio, attempts to fetch existing English subtitles (manual or automatic), or falls back to transcribing the audio using OpenAI's Whisper model. The resulting transcript is preprocessed, and an abstractive summary is generated using Facebook's BART model.
 2.  **Ask Question:** Users can ask natural language questions about the video. The system uses a Sentence Transformer model (`all-MiniLM-L6-v2`) to find the most relevant sections of the transcript (Retrieval). These relevant sections are then fed, along with the question, into Google's FLAN-T5 model to generate a grounded answer (Generation).
 
