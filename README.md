@@ -1,100 +1,143 @@
-# AskTube Installation & Setup Guide
+# AskTube: YouTube Video Q&A and Summarization
 
-## Overview
-
-AskTube is an intelligent tool that enables users to ask questions about YouTube videos and receive instant, context-aware answers. It analyzes the video's audio, subtitles, and contextual information to provide accurate responses. Built with Flask, AskTube integrates with Whisper for speech-to-text transcription and Hugging Face Transformers (such as RoBERTa or DistilBERT) for question answering.
+AskTube is an intelligent tool that allows users to ask questions about YouTube videos and receive context-aware answers. It automatically downloads video audio, transcribes it (using Whisper) or extracts existing subtitles, generates a summary, and utilizes a Retrieval-Augmented Generation (RAG) pipeline to answer user queries based on the video's content.
 
 ---
 
-## Prerequisites
+## Table of Contents
 
-- **FFmpeg:** Required for handling audio and video processing.
-- **Python:** Ensure Python 3.7+ is installed.
-- **Hugging Face Transformers:** For implementing the QA system with models like RoBERTa or DistilBERT.
-
----
-
-## Steps to Install & Run AskTube
-
-### 1. Install FFmpeg
-
-FFmpeg is required for audio extraction from YouTube videos. Follow the instructions below based on your operating system:
-
-- **Linux:**  
-
-sudo apt install ffmpeg
-
-- **Windows:**  
-Download FFmpeg from the [official website](https://ffmpeg.org/download.html), extract the files, and add its `bin` directory to your system environment variables.
-
-- **macOS:**  
-
-brew install ffmpeg
+* [Project Overview](#project-overview)
+* [Features](#features)
+* [Technologies Used](#technologies-used)
+* [Folder Structure](#folder-structure)
+* [Setup and Installation](#setup-and-installation)
+* [Running the Application](#running-the-application)
+* [Presentation and Demo](#presentation-and-demo)
+* [Project Report](#project-report)
+* [Team Members](#team-members)
 
 ---
 
-### 2. Clone the Repository
+## Project Overview
 
-Clone the AskTube repository to your local machine:
+AskTube aims to make video content more accessible and digestible. Users provide a YouTube video URL and can then perform two main actions:
 
-git clone https://github.com/yourusername/AskTube.git
-cd AskTube
+1.  **Process Video:** The application downloads the audio, attempts to fetch existing English subtitles (manual or automatic), or falls back to transcribing the audio using OpenAI's Whisper model. The resulting transcript is preprocessed, and an abstractive summary is generated using Facebook's BART model.
+2.  **Ask Question:** Users can ask natural language questions about the video. The system uses a Sentence Transformer model (`all-MiniLM-L6-v2`) to find the most relevant sections of the transcript (Retrieval). These relevant sections are then fed, along with the question, into Google's FLAN-T5 model to generate a grounded answer (Generation).
 
----
-
-### 3. Install Dependencies
-
-Install the required Python libraries:
-
-pip install -r requirements.txt
-
----
-
-### 4. Configure Script Execution (Windows) – OPTIONAL
-
-If you're on Windows and encounter an issue with script execution, you can temporarily allow it by running the following in PowerShell:
-
-Set-ExecutionPolicy Unrestricted -Scope Process
-
----
-
-### 5. Activate Virtual Environment (Optional)
-
-If you're using a virtual environment, activate it using the following command:
-
-- **Windows:**
-
-AskTube\Scripts\Activate.ps1
-
-- **macOS/Linux:**
-
-source AskTube/bin/activate
-
----
-
-### 6. Run the Application
-
-Start the AskTube application by running:
-
-python app.py
+The entire application is served via a lightweight Flask web server.
 
 ---
 
 ## Features
 
-- **Audio & Subtitle Analysis:**  
-  Extracts and processes audio and subtitles to understand video content.
-
-- **Whisper Integration:**  
-  Utilizes Whisper for high-quality speech-to-text transcription of video audio, ensuring accurate conversion of spoken content.
-
-- **Context-Aware Question Answering:**  
-  Implements Hugging Face Transformers (RoBERTa/DistilBERT) to provide intelligent, context-aware answers based on the video’s content.
-
-- **YouTube Video Processing:**  
-  Allows users to upload a YouTube URL, from which the audio and subtitles are extracted for analysis.
+* **YouTube Video Processing:** Accepts YouTube video URLs as input.
+* **Automatic Transcription/Subtitle Extraction:** Uses `yt-dlp` to fetch audio/subtitles and OpenAI's Whisper (`base` model) for accurate speech-to-text when subtitles aren't available.
+* **Text Summarization:** Generates abstractive summaries of video content using `facebook/bart-large-cnn`. Handles long videos via chunking.
+* **Retrieval-Augmented Generation (RAG) for Q&A:**
+    * Uses semantic search (`all-MiniLM-L6-v2`) to find the top 3 relevant text chunks based on the user's query.
+    * Uses a generative model (`google/flan-t5-base`) to synthesize an answer based *only* on the retrieved relevant context.
+* **Web Interface:** Simple Flask-based UI for interacting with the application.
 
 ---
 
-**Happy querying with AskTube!**
+## Technologies Used
 
+* **Backend:** Flask
+* **YouTube Downloader:** `yt-dlp`
+* **Speech-to-Text:** OpenAI `Whisper`
+* **NLP Libraries:**
+    * `transformers` (Hugging Face)
+    * `sentence-transformers`
+    * `torch` (PyTorch)
+* **Core Models:**
+    * Q&A Generation: `google/flan-t5-base`
+    * Summarization: `facebook/bart-large-cnn`
+    * Semantic Search/Retrieval: `all-MiniLM-L6-v2`
+* **Audio Processing Prerequisite:** FFmpeg
+* **Programming Language:** Python 3
+
+---
+
+## Folder Structure
+
+```text
+AskTube/
+├── downloads/           # Temporary storage for downloaded audio/subtitles
+├── preprocessing/       # Stores preprocessed text files
+├── summaries/           # Stores generated summary files
+├── transcriptions/      # Stores raw transcription/subtitle files
+├── templates/
+│   └── index.html       # Simple HTML frontend
+├── app.py               # Main Flask application script
+├── requirements.txt     # Python dependencies
+└── README.md            # This file
+Setup and Installation
+Follow these steps to set up and run the AskTube project locally.
+
+1. Prerequisites
+Python: Ensure Python 3.7+ is installed.
+Git: Required for cloning the repository.
+FFmpeg: Required by yt-dlp and Whisper for audio processing.
+2. Install FFmpeg
+Follow the instructions below based on your operating system:
+
+Linux (Debian/Ubuntu):
+Bash
+
+sudo apt update && sudo apt install ffmpeg
+macOS (using Homebrew):
+Bash
+
+brew install ffmpeg
+Windows: Download FFmpeg from the official website, extract the files, and add the location of the bin directory (containing ffmpeg.exe) to your system's PATH environment variable.
+3. Clone the Repository
+Clone the AskTube repository to your local machine (replace yourusername/AskTube.git with the actual URL if different):
+
+Bash
+
+git clone [https://github.com/yourusername/AskTube.git](https://github.com/yourusername/AskTube.git)
+cd AskTube
+4. Set Up Virtual Environment (Recommended)
+It's recommended to use a virtual environment to manage dependencies.
+
+Bash
+
+# Create virtual environment
+python -m venv venv
+
+# Activate virtual environment
+# On Windows (Git Bash or Command Prompt/PowerShell):
+venv\Scripts\activate
+# On macOS/Linux:
+source venv/bin/activate
+5. Install Dependencies
+Install the required Python libraries using pip:
+
+Bash
+
+pip install -r requirements.txt
+(Note: This might take some time as it includes libraries like PyTorch, Transformers, etc.)
+
+Running the Application
+Once the setup is complete, start the Flask application:
+
+Bash
+
+python app.py
+The application will typically start on http://127.0.0.1:5000/. Open this URL in your web browser. You should see the interface where you can input a YouTube URL and ask questions. The terminal running the script will show logs, including model loading, download progress, and processing steps.
+
+Presentation and Demo
+You can watch our project presentation and live demo on YouTube:
+
+[Link to YouTube Video Presentation Here] ---
+
+Project Report
+For a detailed overview of the project, including architecture, methodology, contributions, and findings, please refer to our full project report:
+
+[Link to Project Report Here] ---
+
+Team Members
+Luca Donadello
+Muralidharan Krishnakumar
+Hasan Mohd Hussain
