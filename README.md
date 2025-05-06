@@ -165,7 +165,7 @@ You can watch our project presentation and live demo on YouTube by clicking the 
 
 For a detailed overview of the project, including methodology and contributions, please refer to our full project report:
 
-[Final-Report-NLP.pdf]
+[Final-Report-NLP.pdf](Final-Report-NLP.pdf)
 
 ---
 
